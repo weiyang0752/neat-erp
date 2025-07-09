@@ -11,6 +11,7 @@
 
     <modules>
         <module>neaterp-dependencies</module>
+        <module>neaterp-framework</module>
     </modules>
 
     <name>${project.artifactId}</name>
