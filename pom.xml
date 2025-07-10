@@ -12,6 +12,8 @@
     <modules>
         <module>neaterp-dependencies</module>
         <module>neaterp-framework</module>
+        <module>neaterp-server</module>
+        <module>neaterp-module-system</module>
     </modules>
 
     <name>${project.artifactId}</name>
@@ -122,6 +124,14 @@
                         <phase>clean</phase>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>16</source>
+                    <target>16</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>
