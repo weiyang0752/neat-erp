@@ -2,12 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>neaterp</artifactId>
         <groupId>com.neaterp</groupId>
+        <artifactId>neaterp</artifactId>
         <version>${revision}</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
     <artifactId>neaterp-module-system</artifactId>
     <packaging>jar</packaging>
@@ -18,7 +18,15 @@
         例如说：用户、部门、权限、数据字典等等
     </description>
 
+    <dependencies>
 
+        <!-- Web 相关 -->
+        <dependency>
+            <groupId>com.neaterp</groupId>
+            <artifactId>neaterp-spring-boot-starter-security</artifactId>
+        </dependency>
+
+    </dependencies>
 
 
 </project>

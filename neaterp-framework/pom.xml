@@ -37,6 +37,8 @@
     </build>
     <modules>
         <module>neaterp-common</module>
+        <module>neaterp-spring-boot-starter-web</module>
+        <module>neaterp-spring-boot-starter-security</module>
     </modules>
 
 </project>

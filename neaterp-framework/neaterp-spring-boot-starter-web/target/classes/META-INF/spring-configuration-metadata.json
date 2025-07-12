@@ -1,0 +1,57 @@
+{
+  "groups": [
+    {
+      "name": "neaterp.web",
+      "type": "com.neaterp.framework.web.config.WebProperties",
+      "sourceType": "com.neaterp.framework.web.config.WebProperties"
+    },
+    {
+      "name": "neaterp.web.admin-api",
+      "type": "com.neaterp.framework.web.config.WebProperties$Api",
+      "sourceType": "com.neaterp.framework.web.config.WebProperties"
+    },
+    {
+      "name": "neaterp.web.admin-ui",
+      "type": "com.neaterp.framework.web.config.WebProperties$Ui",
+      "sourceType": "com.neaterp.framework.web.config.WebProperties"
+    },
+    {
+      "name": "neaterp.web.app-api",
+      "type": "com.neaterp.framework.web.config.WebProperties$Api",
+      "sourceType": "com.neaterp.framework.web.config.WebProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "neaterp.web.admin-api.controller",
+      "type": "java.lang.String",
+      "description": "Controller 所在包的 Ant 路径规则 主要目的是，给该 Controller 设置指定的 {@link #prefix}",
+      "sourceType": "com.neaterp.framework.web.config.WebProperties$Api"
+    },
+    {
+      "name": "neaterp.web.admin-api.prefix",
+      "type": "java.lang.String",
+      "description": "API 前缀，实现所有 Controller 提供的 RESTFul API 的统一前缀 意义：通过该前缀，避免 Swagger、Actuator 意外通过 Nginx 暴露出来给外部，带来安全性问题 这样，Nginx 只需要配置转发到 \/api\/* 的所有接口即可。 @see NeaterpWebAutoConfiguration#configurePathMatch(PathMatchConfigurer)",
+      "sourceType": "com.neaterp.framework.web.config.WebProperties$Api"
+    },
+    {
+      "name": "neaterp.web.admin-ui.url",
+      "type": "java.lang.String",
+      "description": "访问地址",
+      "sourceType": "com.neaterp.framework.web.config.WebProperties$Ui"
+    },
+    {
+      "name": "neaterp.web.app-api.controller",
+      "type": "java.lang.String",
+      "description": "Controller 所在包的 Ant 路径规则 主要目的是，给该 Controller 设置指定的 {@link #prefix}",
+      "sourceType": "com.neaterp.framework.web.config.WebProperties$Api"
+    },
+    {
+      "name": "neaterp.web.app-api.prefix",
+      "type": "java.lang.String",
+      "description": "API 前缀，实现所有 Controller 提供的 RESTFul API 的统一前缀 意义：通过该前缀，避免 Swagger、Actuator 意外通过 Nginx 暴露出来给外部，带来安全性问题 这样，Nginx 只需要配置转发到 \/api\/* 的所有接口即可。 @see NeaterpWebAutoConfiguration#configurePathMatch(PathMatchConfigurer)",
+      "sourceType": "com.neaterp.framework.web.config.WebProperties$Api"
+    }
+  ],
+  "hints": []
+}
