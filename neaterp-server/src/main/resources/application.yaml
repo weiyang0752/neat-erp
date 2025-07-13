@@ -16,3 +16,5 @@ spring:
 neaterp:
   info:
     base-package: com.neaterp
+  xss:
+    enable: false
