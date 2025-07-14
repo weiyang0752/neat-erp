@@ -2,6 +2,11 @@
 <project version="4">
   <component name="RemoteRepositoriesConfiguration">
     <remote-repository>
+      <option name="id" value="aigo-public" />
+      <option name="name" value="aigo-public" />
+      <option name="url" value="http://10.0.3.185:8081/#browse/browse:maven-public/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="aliyunmaven" />
       <option name="name" value="阿里云公共仓库" />
       <option name="url" value="https://maven.aliyun.com/repository/public" />
@@ -12,6 +17,11 @@
       <option name="url" value="https://repo.maven.apache.org/maven2" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="aliyunmaven" />
+      <option name="name" value="aliyun" />
+      <option name="url" value="https://maven.aliyun.com/repository/public" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="zwkj-dev" />
       <option name="name" value="紫蔚私有仓库" />
       <option name="url" value="http://52.81.121.136/repository/maven-public-dev/" />
@@ -20,6 +30,11 @@
       <option name="id" value="spring-milestones" />
       <option name="name" value="Spring Milestones" />
       <option name="url" value="https://repo.spring.io/milestone" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="aliyun-public" />
+      <option name="name" value="aliyun-public" />
+      <option name="url" value="https://maven.aliyun.com/repository/public" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />

@@ -8,10 +8,10 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-configuration-processor/3.4.5/spring-boot-configuration-processor-3.4.5.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.6.3/mapstruct-processor-1.6.3.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.6.3/mapstruct-1.6.3.jar" />
+          <entry name="$PROJECT_DIR$/../../Maven/MavenRepository/org/springframework/boot/spring-boot-configuration-processor/3.4.5/spring-boot-configuration-processor-3.4.5.jar" />
+          <entry name="$PROJECT_DIR$/../../Maven/MavenRepository/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
+          <entry name="$PROJECT_DIR$/../../Maven/MavenRepository/org/mapstruct/mapstruct-processor/1.6.3/mapstruct-processor-1.6.3.jar" />
+          <entry name="$PROJECT_DIR$/../../Maven/MavenRepository/org/mapstruct/mapstruct/1.6.3/mapstruct-1.6.3.jar" />
         </processorPath>
         <module name="neaterp-spring-boot-starter-web" />
         <module name="neaterp-spring-boot-starter-security" />
@@ -25,7 +25,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="neaterp" options="-parameters" />
       <module name="neaterp-common" options="-parameters" />
-      <module name="neaterp-framework" options="-parameters" />
+      <module name="neaterp-framework" options="" />
       <module name="neaterp-module-system" options="-parameters" />
       <module name="neaterp-server" options="-parameters" />
       <module name="neaterp-spring-boot-starter-security" options="-parameters" />
