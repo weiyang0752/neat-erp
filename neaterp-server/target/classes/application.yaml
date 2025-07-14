@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: neaterp-server
+
+  profiles:
+    active: local
+
+  main:
+    allow-circular-references: true  # 允许循环依赖，因为项目是三层架构，无法避免这个情况。
+
+
+
+
+--- #################### neaterp相关配置 ####################
+
+neaterp:
+  info:
+    base-package: com.neaterp

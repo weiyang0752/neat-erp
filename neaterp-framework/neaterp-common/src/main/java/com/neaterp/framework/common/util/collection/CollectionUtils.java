@@ -3,8 +3,8 @@ package com.neaterp.framework.common.util.collection;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.iocoder.yudao.framework.common.pojo.PageResult;
 import com.google.common.collect.ImmutableMap;
+import com.neaterp.framework.common.pojo.PageResult;
 
 import java.util.*;
 import java.util.function.*;

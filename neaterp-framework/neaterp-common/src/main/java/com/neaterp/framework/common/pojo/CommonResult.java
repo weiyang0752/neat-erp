@@ -1,11 +1,11 @@
 package com.neaterp.framework.common.pojo;
 
 import cn.hutool.core.lang.Assert;
-import cn.iocoder.yudao.framework.common.exception.ErrorCode;
-import cn.iocoder.yudao.framework.common.exception.ServiceException;
-import cn.iocoder.yudao.framework.common.exception.enums.GlobalErrorCodeConstants;
-import cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.neaterp.framework.common.exception.ErrorCode;
+import com.neaterp.framework.common.exception.ServiceException;
+import com.neaterp.framework.common.exception.enums.GlobalErrorCodeConstants;
+import com.neaterp.framework.common.exception.util.ServiceExceptionUtil;
 import lombok.Data;
 
 import java.io.Serializable;
