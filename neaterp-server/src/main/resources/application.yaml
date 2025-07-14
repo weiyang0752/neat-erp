@@ -15,6 +15,10 @@ spring:
 
 neaterp:
   info:
+    version: 1.0.0
     base-package: com.neaterp
   xss:
     enable: false
+  web:
+    admin-ui:
+      url: https://www.baidu.com

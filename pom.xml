@@ -14,6 +14,7 @@
         <module>neaterp-framework</module>
         <module>neaterp-server</module>
         <module>neaterp-module-system</module>
+        <module>neaterp-module-infra</module>
     </modules>
 
     <name>${project.artifactId}</name>
