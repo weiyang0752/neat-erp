@@ -9,6 +9,21 @@ spring:
     allow-circular-references: true  # 允许循环依赖，因为项目是三层架构，无法避免这个情况。
 
 
+--- #################### 接口文档配置 ####################
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui
+  default-flat-param-object: true # 参见 https://doc.xiaominfo.com/docs/faq/v4/knife4j-parameterobject-flat-param 文档
+
+knife4j:
+  enable: false # TODO 芋艿：需要关闭增强，具体原因见：https://github.com/xiaoymin/knife4j/issues/874
+  setting:
+    language: zh_cn
+
 
 
 --- #################### neaterp相关配置 ####################
@@ -22,3 +37,12 @@ neaterp:
   web:
     admin-ui:
       url: https://www.baidu.com
+
+  swagger:
+    title: neaterp平台
+    description: 提供管理后台、用户 App 的所有功能
+    version: ${neaterp.info.version}
+    url: ${neaterp.web.admin-ui.url}
+    email: 1525
+    license: MIT
+    license-url: https://github.com/weiyang0752/neat-erp

@@ -1,1 +1,2 @@
 com.neaterp.framework.web.config.NeaterpWebAutoConfiguration
+com.neaterp.framework.xss.config.NeaterpXssAutoConfiguration
