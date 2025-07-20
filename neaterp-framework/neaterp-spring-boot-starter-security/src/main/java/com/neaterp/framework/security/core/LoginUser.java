@@ -1,4 +1,4 @@
-package com.neaterp.framework.security;
+package com.neaterp.framework.security.core;
 
 import cn.hutool.core.map.MapUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;

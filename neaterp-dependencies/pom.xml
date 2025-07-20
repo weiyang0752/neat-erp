@@ -42,6 +42,7 @@
         <velocity.version>2.4.1</velocity.version>
         <guava.version>33.4.8-jre</guava.version>
         <tika-core.version>3.1.0</tika-core.version>
+        <transmittable-thread-local.version>2.14.5</transmittable-thread-local.version>
 
     </properties>
 
@@ -62,6 +63,7 @@
                 <version>${revision}</version>
             </dependency>
 
+            <!-- 业务组件 -->
 
             <!-- Spring 核心 -->
             <dependency>
@@ -200,6 +202,11 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>transmittable-thread-local</artifactId> <!-- 解决 ThreadLocal 父子线程的传值问题 -->
+                <version>${transmittable-thread-local.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.anji-plus</groupId>

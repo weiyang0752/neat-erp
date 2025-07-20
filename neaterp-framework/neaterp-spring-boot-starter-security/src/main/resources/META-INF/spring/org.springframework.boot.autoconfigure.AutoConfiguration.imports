@@ -1,0 +1,2 @@
+com.neaterp.framework.security.config.NeaterpSecurityAutoConfiguration
+com.neaterp.framework.security.config.NeaterpWebSecurityConfigurerAdapter

@@ -3,7 +3,7 @@ package com.neaterp.framework.security.core.util;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
-import com.neaterp.framework.security.LoginUser;
+import com.neaterp.framework.security.core.LoginUser;
 import com.neaterp.framework.web.core.util.WebFrameworkUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.lang.Nullable;
