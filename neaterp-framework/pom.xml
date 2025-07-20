@@ -39,6 +39,7 @@
         <module>neaterp-common</module>
         <module>neaterp-spring-boot-starter-web</module>
         <module>neaterp-spring-boot-starter-security</module>
+        <module>neaterp-spring-boot-starter-mybatis</module>
     </modules>
 
 </project>
