@@ -1,1 +1,2 @@
 com.neaterp.framework.mybatis.config.NeaterpMybatisAutoConfiguration
+com.neaterp.framework.datasource.config.NeaterpDataSourceAutoConfiguration
