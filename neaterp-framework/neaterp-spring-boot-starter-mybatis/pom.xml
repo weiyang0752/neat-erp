@@ -25,7 +25,7 @@
         <!-- Web 相关 -->
         <dependency>
             <groupId>com.neaterp</groupId>
-            <artifactId>neaterp-spring-boot-starter-web</artifactId>
+            <artifactId>neaterp-spring-boot-starter-security</artifactId>
             <scope>provided</scope> <!-- 设置为 provided，只有 OncePerRequestFilter 使用到 -->
         </dependency>
 
