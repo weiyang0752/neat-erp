@@ -1,0 +1,2 @@
+com.neaterp.framework.redis.config.NeaterpRedisAutoConfiguration
+com.neaterp.framework.redis.config.NeaterpCacheAutoConfiguration

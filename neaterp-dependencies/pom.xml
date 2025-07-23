@@ -103,6 +103,12 @@
 
             <!-- DB 相关 -->
             <dependency>
+                <groupId>com.neaterp</groupId>
+                <artifactId>neaterp-spring-boot-starter-mybatis</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-3-starter</artifactId>
                 <version>${druid.version}</version>
@@ -173,6 +179,12 @@
                 <groupId>com.taosdata.jdbc</groupId>
                 <artifactId>taos-jdbcdriver</artifactId>
                 <version>${taos.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.neaterp</groupId>
+                <artifactId>neaterp-spring-boot-starter-redis</artifactId>
+                <version>${revision}</version>
             </dependency>
 
             <!-- 服务保障相关 -->
