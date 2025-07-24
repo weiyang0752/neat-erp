@@ -106,3 +106,6 @@ neaterp:
     email: 1525
     license: MIT
     license-url: https://github.com/weiyang0752/neat-erp
+
+  tenant: # 多租户相关配置项
+    enable: true

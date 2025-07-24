@@ -2,42 +2,49 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
     <parent>
+        <artifactId>neaterp-framework</artifactId>
         <groupId>com.neaterp</groupId>
-        <artifactId>neaterp</artifactId>
         <version>${revision}</version>
     </parent>
+    <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>neaterp-module-system</artifactId>
+    <artifactId>neaterp-spring-boot-starter-biz-tenant</artifactId>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
-    <description>
-        system 模块下，我们放通用业务，支撑上层的核心业务。
-        例如说：用户、部门、权限、数据字典等等
-    </description>
+    <description>多租户</description>
+    <url>https://github.com/weiyang0752/neat-erp</url>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>16</source>
+                    <target>16</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
-
-
-        <!-- 业务组件 -->
         <dependency>
             <groupId>com.neaterp</groupId>
-            <artifactId>neaterp-spring-boot-starter-biz-tenant</artifactId>
+            <artifactId>neaterp-common</artifactId>
         </dependency>
 
-
+        <!-- spring boot 配置所需依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
 
         <!-- Web 相关 -->
         <dependency>
             <groupId>com.neaterp</groupId>
             <artifactId>neaterp-spring-boot-starter-security</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
         <!-- DB 相关 -->
@@ -51,6 +58,12 @@
             <artifactId>neaterp-spring-boot-starter-redis</artifactId>
         </dependency>
 
+
+        <!-- 工具类相关 -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
 
     </dependencies>
 

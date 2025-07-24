@@ -68,6 +68,12 @@
             </dependency>
 
             <!-- 业务组件 -->
+            <dependency>
+                <groupId>com.neaterp</groupId>
+                <artifactId>neaterp-spring-boot-starter-biz-tenant</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
 
             <!-- Spring 核心 -->
             <dependency>
