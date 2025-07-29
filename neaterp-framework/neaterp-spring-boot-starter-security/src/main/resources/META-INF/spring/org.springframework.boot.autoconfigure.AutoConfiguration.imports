@@ -1,2 +1,3 @@
 com.neaterp.framework.security.config.NeaterpSecurityAutoConfiguration
 com.neaterp.framework.security.config.NeaterpWebSecurityConfigurerAdapter
+com.neaterp.framework.operatelog.config.NeaterpOperateLogConfiguration

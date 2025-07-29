@@ -14,6 +14,7 @@ import com.neaterp.framework.common.exception.util.ServiceExceptionUtil;
 import com.neaterp.framework.common.pojo.CommonResult;
 import com.neaterp.framework.common.util.collection.SetUtils;
 import com.neaterp.framework.common.util.json.JsonUtils;
+import com.neaterp.framework.common.util.monitor.TracerUtils;
 import com.neaterp.framework.common.util.servlet.ServletUtils;
 import com.neaterp.framework.web.core.util.WebFrameworkUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -323,7 +324,7 @@ public class GlobalExceptionHandler {
         errorLog.setExceptionMethodName(stackTraceElement.getMethodName());
         errorLog.setExceptionLineNumber(stackTraceElement.getLineNumber());
         // 设置其它字段
-//        errorLog.setTraceId(TracerUtils.getTraceId()); // TODO 后期学习完skywalking再处理
+        errorLog.setTraceId(TracerUtils.getTraceId());
         errorLog.setApplicationName(applicationName);
         errorLog.setRequestUrl(request.getRequestURI());
         Map<String, Object> requestParams = MapUtil.<String, Object>builder()
