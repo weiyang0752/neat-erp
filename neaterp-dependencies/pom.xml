@@ -50,6 +50,9 @@
         <tika-core.version>3.1.0</tika-core.version>
         <transmittable-thread-local.version>2.14.5</transmittable-thread-local.version>
         <bizlog-sdk.version>3.0.6</bizlog-sdk.version>
+        <ip2region.version>2.7.0</ip2region.version>
+        <!-- 三方云服务相关 -->
+        <commons-compress.version>1.27.1</commons-compress.version>
 
     </properties>
 
@@ -79,6 +82,11 @@
             <dependency>
                 <groupId>com.neaterp</groupId>
                 <artifactId>neaterp-spring-boot-starter-biz-data-permission</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.neaterp</groupId>
+                <artifactId>neaterp-spring-boot-starter-biz-ip</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -307,6 +315,21 @@
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
                 <version>${jsoup.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.lionsoul</groupId>
+                <artifactId>ip2region</artifactId>
+                <version>${ip2region.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.neaterp</groupId>
+                <artifactId>neaterp-spring-boot-starter-excel</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commons-compress.version}</version>
             </dependency>
 
         </dependencies>
