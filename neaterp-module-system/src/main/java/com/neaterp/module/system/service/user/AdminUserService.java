@@ -50,4 +50,12 @@ public interface AdminUserService {
      */
     void updateUserPassword(Long id, String password);
 
+    /**
+     * 修改状态
+     *
+     * @param id     用户编号
+     * @param status 状态
+     */
+    void updateUserStatus(Long id, Integer status);
+
 }

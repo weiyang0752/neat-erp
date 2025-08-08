@@ -173,6 +173,17 @@ public class AdminUserServiceImpl implements AdminUserService {
         LogRecordContext.putVariable("newPassword", updateObj.getPassword());
     }
 
+    @Override
+    public void updateUserStatus(Long id, Integer status) {
+        // 校验用户存在
+        validateUserExists(id);
+        // 更新状态
+        AdminUserDO updateObj = new AdminUserDO();
+        updateObj.setId(id);
+        updateObj.setStatus(status);
+        userMapper.updateById(updateObj);
+    }
+
     private void updateUserPost(UserSaveReqVO reqVO, AdminUserDO updateObj) {
         Long userId = reqVO.getId();
         Set<Long> dbPostIds = convertSet(userPostMapper.selectListByUserId(userId), UserPostDO::getPostId);

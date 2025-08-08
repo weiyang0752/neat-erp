@@ -3,6 +3,7 @@ package com.neaterp.module.system.controller.admin.user;
 import com.neaterp.framework.common.pojo.CommonResult;
 import com.neaterp.module.system.controller.admin.user.vo.user.UserSaveReqVO;
 import com.neaterp.module.system.controller.admin.user.vo.user.UserUpdatePasswordReqVO;
+import com.neaterp.module.system.controller.admin.user.vo.user.UserUpdateStatusReqVO;
 import com.neaterp.module.system.service.user.AdminUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -66,6 +67,14 @@ public class UserController {
     @PreAuthorize("@ss.hasPermission('system:user:update-password')")
     public CommonResult<Boolean> updateUserPassword(@Valid @RequestBody UserUpdatePasswordReqVO reqVO) {
         userService.updateUserPassword(reqVO.getId(), reqVO.getPassword());
+        return success(true);
+    }
+
+    @PutMapping("/update-status")
+    @Operation(summary = "修改用户状态")
+    @PreAuthorize("@ss.hasPermission('system:user:update')")
+    public CommonResult<Boolean> updateUserStatus(@Valid @RequestBody UserUpdateStatusReqVO reqVO) {
+        userService.updateUserStatus(reqVO.getId(), reqVO.getStatus());
         return success(true);
     }
 
