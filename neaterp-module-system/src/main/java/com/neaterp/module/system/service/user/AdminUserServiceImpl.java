@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import static com.neaterp.framework.common.exception.util.ServiceExceptionUtil.exception;
@@ -139,6 +140,37 @@ public class AdminUserServiceImpl implements AdminUserService {
 
         // 3. 记录操作日志上下文
         LogRecordContext.putVariable("user", user);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteUserList(List<Long> ids) {
+        // 1. 批量删除用户
+        userMapper.deleteByIds(ids);
+
+        // 2. 批量删除用户关联数据
+        ids.forEach(id -> {
+            permissionService.processUserDeleted(id);
+            userPostMapper.deleteByUserId(id);
+        });
+    }
+
+    @Override
+    @LogRecord(type = SYSTEM_USER_TYPE, subType = SYSTEM_USER_UPDATE_PASSWORD_SUB_TYPE, bizNo = "{{#id}}",
+            success = SYSTEM_USER_UPDATE_PASSWORD_SUCCESS)
+    public void updateUserPassword(Long id, String password) {
+        // 1. 校验用户存在
+        AdminUserDO user = validateUserExists(id);
+
+        // 2. 更新密码
+        AdminUserDO updateObj = new AdminUserDO();
+        updateObj.setId(id);
+        updateObj.setPassword(encodePassword(password)); // 加密密码
+        userMapper.updateById(updateObj);
+
+        // 3. 记录操作日志上下文
+        LogRecordContext.putVariable("user", user);
+        LogRecordContext.putVariable("newPassword", updateObj.getPassword());
     }
 
     private void updateUserPost(UserSaveReqVO reqVO, AdminUserDO updateObj) {
