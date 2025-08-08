@@ -9,10 +9,7 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.neaterp.framework.common.pojo.CommonResult.success;
 
@@ -32,6 +29,14 @@ public class UserController {
     public CommonResult<Long> createUser(@Valid @RequestBody UserSaveReqVO reqVO) {
         Long id = userService.createUser(reqVO);
         return success(id);
+    }
+
+    @PutMapping("update")
+    @Operation(summary = "修改用户")
+    @PreAuthorize("@ss.hasPermission('system:user:update')")
+    public CommonResult<Boolean> updateUser(@Valid @RequestBody UserSaveReqVO reqVO) {
+        userService.updateUser(reqVO);
+        return success(true);
     }
 
 }

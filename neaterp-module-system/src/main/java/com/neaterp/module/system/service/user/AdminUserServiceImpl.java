@@ -1,9 +1,11 @@
 package com.neaterp.module.system.service.user;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.annotations.VisibleForTesting;
 import com.mzt.logapi.context.LogRecordContext;
+import com.mzt.logapi.service.impl.DiffParseFunction;
 import com.mzt.logapi.starter.annotation.LogRecord;
 import com.neaterp.framework.common.enums.CommonStatusEnum;
 import com.neaterp.framework.common.util.collection.CollectionUtils;
@@ -16,6 +18,7 @@ import com.neaterp.module.system.dal.mysql.dept.UserPostMapper;
 import com.neaterp.module.system.dal.mysql.user.AdminUserMapper;
 import com.neaterp.module.system.service.dept.DeptService;
 import com.neaterp.module.system.service.dept.PostService;
+import com.neaterp.module.system.service.permission.PermissionService;
 import com.neaterp.module.system.service.tenant.TenantService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -24,10 +27,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.Set;
 
 import static com.neaterp.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.neaterp.framework.common.util.collection.CollectionUtils.convertList;
+import static com.neaterp.framework.common.util.collection.CollectionUtils.convertSet;
 import static com.neaterp.module.system.enums.ErrorCodeConstants.*;
 import static com.neaterp.module.system.enums.LogRecordConstants.*;
 
@@ -52,6 +57,9 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Resource
     private PasswordEncoder passwordEncoder;
+
+    @Resource
+    private PermissionService permissionService;
 
     @Resource
     @Lazy // 延迟，避免循环依赖报错
@@ -93,8 +101,62 @@ public class AdminUserServiceImpl implements AdminUserService {
         return user.getId();
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    @LogRecord(type = SYSTEM_USER_TYPE, subType = SYSTEM_USER_UPDATE_SUB_TYPE, bizNo = "{{#updateReqVO.id}}",
+            success = SYSTEM_USER_UPDATE_SUCCESS)
+    public void updateUser(UserSaveReqVO updateReqVO) {
+        updateReqVO.setPassword(null); // 特殊：此处不更新密码
+        // 1. 校验正确性
+        AdminUserDO oldUser = validateUserForCreateOrUpdate(updateReqVO.getId(), updateReqVO.getUsername(),
+                updateReqVO.getMobile(), updateReqVO.getEmail(), updateReqVO.getDeptId(), updateReqVO.getPostIds());
 
+        // 2.1 更新用户
+        AdminUserDO updateObj = BeanUtils.toBean(updateReqVO, AdminUserDO.class);
+        userMapper.updateById(updateObj);
+        // 2.2 更新岗位
+        updateUserPost(updateReqVO, updateObj);
 
+        // 3. 记录操作日志上下文
+        LogRecordContext.putVariable(DiffParseFunction.OLD_OBJECT, BeanUtils.toBean(oldUser, UserSaveReqVO.class));
+        LogRecordContext.putVariable("user", oldUser);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    @LogRecord(type = SYSTEM_USER_TYPE, subType = SYSTEM_USER_DELETE_SUB_TYPE, bizNo = "{{#id}}",
+            success = SYSTEM_USER_DELETE_SUCCESS)
+    public void deleteUser(Long id) {
+        // 1. 校验用户存在
+        AdminUserDO user = validateUserExists(id);
+
+        // 2.1 删除用户
+        userMapper.deleteById(id);
+        // 2.2 删除用户关联数据
+        permissionService.processUserDeleted(id);
+        // 2.2 删除用户岗位
+        userPostMapper.deleteByUserId(id);
+
+        // 3. 记录操作日志上下文
+        LogRecordContext.putVariable("user", user);
+    }
+
+    private void updateUserPost(UserSaveReqVO reqVO, AdminUserDO updateObj) {
+        Long userId = reqVO.getId();
+        Set<Long> dbPostIds = convertSet(userPostMapper.selectListByUserId(userId), UserPostDO::getPostId);
+        // 计算新增和删除的岗位编号
+        Set<Long> postIds = CollUtil.emptyIfNull(updateObj.getPostIds());
+        Collection<Long> createPostIds = CollUtil.subtract(postIds, dbPostIds);
+        Collection<Long> deletePostIds = CollUtil.subtract(dbPostIds, postIds);
+        // 执行新增和删除。对于已经授权的岗位，不用做任何处理
+        if (!CollectionUtil.isEmpty(createPostIds)) {
+            userPostMapper.insertBatch(convertList(createPostIds,
+                    postId -> new UserPostDO().setUserId(userId).setPostId(postId)));
+        }
+        if (!CollectionUtil.isEmpty(deletePostIds)) {
+            userPostMapper.deleteByUserIdAndPostId(userId, deletePostIds);
+        }
+    }
 
     private AdminUserDO validateUserForCreateOrUpdate(Long id, String username, String mobile, String email,
                                                       Long deptId, Set<Long> postIds) {
