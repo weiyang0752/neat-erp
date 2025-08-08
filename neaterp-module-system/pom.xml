@@ -26,6 +26,10 @@
             <groupId>com.neaterp</groupId>
             <artifactId>neaterp-spring-boot-starter-biz-tenant</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.neaterp</groupId>
+            <artifactId>neaterp-spring-boot-starter-biz-data-permission</artifactId>
+        </dependency>
 
 
 
@@ -49,6 +53,13 @@
         <dependency>
             <groupId>com.neaterp</groupId>
             <artifactId>neaterp-spring-boot-starter-redis</artifactId>
+        </dependency>
+
+
+        <!-- 工具类相关 -->
+        <dependency>
+            <groupId>com.neaterp</groupId>
+            <artifactId>neaterp-spring-boot-starter-excel</artifactId>
         </dependency>
 
 
