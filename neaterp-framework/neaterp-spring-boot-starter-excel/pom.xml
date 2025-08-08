@@ -58,6 +58,12 @@
         </dependency>
 
         <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.neaterp</groupId>
             <artifactId>neaterp-spring-boot-starter-biz-ip</artifactId>
             <optional>true</optional> <!-- 设置为 optional，只有在 AreaConvert 的时候使用 -->

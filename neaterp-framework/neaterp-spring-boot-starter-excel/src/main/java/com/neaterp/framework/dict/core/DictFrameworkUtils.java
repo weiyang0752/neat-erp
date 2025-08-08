@@ -78,4 +78,10 @@ public class DictFrameworkUtils {
         return dictData!= null ? dictData.getValue(): null;
     }
 
+    @SneakyThrows
+    public static List<String> getDictDataValueList(String dictType) {
+        List<DictDataRespDTO> dictDatas = GET_DICT_DATA_CACHE.get(dictType);
+        return convertList(dictDatas, DictDataRespDTO::getValue);
+    }
+
 }
