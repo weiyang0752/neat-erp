@@ -9,12 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.neaterp.framework.common.exception.util.ServiceExceptionUtil.exception;
+import static com.neaterp.framework.common.util.collection.CollectionUtils.convertSet;
 import static com.neaterp.module.system.enums.ErrorCodeConstants.DEPT_NOT_ENABLE;
 import static com.neaterp.module.system.enums.ErrorCodeConstants.DEPT_NOT_FOUND;
 
@@ -43,6 +41,25 @@ public class DeptServiceImpl implements DeptService {
             return Collections.emptyList();
         }
         return deptMapper.selectByIds(ids);
+    }
+
+    @Override
+    public List<DeptDO> getChildDeptList(Collection<Long> ids) {
+        List<DeptDO> children = new LinkedList<>();
+        // 遍历每一层
+        Collection<Long> parentIds = ids;
+        for (int i = 0; i < Short.MAX_VALUE; i++) { // 使用 Short.MAX_VALUE 避免 bug 场景下，存在死循环
+            // 查询当前层，所有的子部门
+            List<DeptDO> depts = deptMapper.selectListByParentId(parentIds);
+            // 1. 如果没有子部门，则结束遍历
+            if (CollUtil.isEmpty(depts)) {
+                break;
+            }
+            // 2. 如果有子部门，继续遍历
+            children.addAll(depts);
+            parentIds = convertSet(depts, DeptDO::getId);
+        }
+        return children;
     }
 
     @Override

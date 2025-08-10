@@ -8,10 +8,13 @@ import com.mzt.logapi.context.LogRecordContext;
 import com.mzt.logapi.service.impl.DiffParseFunction;
 import com.mzt.logapi.starter.annotation.LogRecord;
 import com.neaterp.framework.common.enums.CommonStatusEnum;
+import com.neaterp.framework.common.pojo.PageResult;
 import com.neaterp.framework.common.util.collection.CollectionUtils;
 import com.neaterp.framework.common.util.object.BeanUtils;
 import com.neaterp.framework.datapermission.core.util.DataPermissionUtils;
+import com.neaterp.module.system.controller.admin.user.vo.user.UserPageReqVO;
 import com.neaterp.module.system.controller.admin.user.vo.user.UserSaveReqVO;
+import com.neaterp.module.system.dal.dataobject.dept.DeptDO;
 import com.neaterp.module.system.dal.dataobject.dept.UserPostDO;
 import com.neaterp.module.system.dal.dataobject.user.AdminUserDO;
 import com.neaterp.module.system.dal.mysql.dept.UserPostMapper;
@@ -28,12 +31,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import static com.neaterp.framework.common.exception.util.ServiceExceptionUtil.exception;
-import static com.neaterp.framework.common.util.collection.CollectionUtils.convertList;
-import static com.neaterp.framework.common.util.collection.CollectionUtils.convertSet;
+import static com.neaterp.framework.common.util.collection.CollectionUtils.*;
 import static com.neaterp.module.system.enums.ErrorCodeConstants.*;
 import static com.neaterp.module.system.enums.LogRecordConstants.*;
 
@@ -184,6 +187,26 @@ public class AdminUserServiceImpl implements AdminUserService {
         userMapper.updateById(updateObj);
     }
 
+    @Override
+    public PageResult<AdminUserDO> getUserPage(UserPageReqVO reqVO) {
+        // 如果有角色编号，查询角色对应的用户编号
+        Set<Long> userIds = reqVO.getRoleId() != null ?
+                permissionService.getUserRoleIdListByRoleId(singleton(reqVO.getRoleId())) : null;
+
+        // 分页查询
+        return userMapper.selectPage(reqVO, getDeptCondition(reqVO.getDeptId()), userIds);
+    }
+
+    @Override
+    public List<AdminUserDO> getUserListByStatus(Integer status) {
+        return userMapper.selectListByStatus(status);
+    }
+
+    @Override
+    public AdminUserDO getUser(Long id) {
+        return userMapper.selectById(id);
+    }
+
     private void updateUserPost(UserSaveReqVO reqVO, AdminUserDO updateObj) {
         Long userId = reqVO.getId();
         Set<Long> dbPostIds = convertSet(userPostMapper.selectListByUserId(userId), UserPostDO::getPostId);
@@ -215,7 +238,7 @@ public class AdminUserServiceImpl implements AdminUserService {
             // 校验邮箱唯一
             validateEmailUnique(id, email);
             // 校验部门处于开启状态
-            deptService.validateDeptList(CollectionUtils.singleton(deptId));
+            deptService.validateDeptList(singleton(deptId));
             // 校验岗位处于开启状态
             postService.validatePostList(postIds);
             return user;
@@ -223,6 +246,20 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     }
 
+    /**
+     * 获得部门条件：查询指定部门的子部门编号们，包括自身
+     *
+     * @param deptId 部门编号
+     * @return 部门编号集合
+     */
+    private Set<Long> getDeptCondition(Long deptId) {
+        if (deptId == null) {
+            return Collections.emptySet();
+        }
+        Set<Long> deptIds = convertSet(deptService.getChildDeptList(deptId), DeptDO::getId);
+        deptIds.add(deptId); // 包括自身
+        return deptIds;
+    }
 
     @VisibleForTesting
     AdminUserDO validateUserExists(Long id) {

@@ -1,6 +1,9 @@
 package com.neaterp.module.system.service.user;
 
+import com.neaterp.framework.common.pojo.PageResult;
+import com.neaterp.module.system.controller.admin.user.vo.user.UserPageReqVO;
 import com.neaterp.module.system.controller.admin.user.vo.user.UserSaveReqVO;
+import com.neaterp.module.system.dal.dataobject.user.AdminUserDO;
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -57,5 +60,29 @@ public interface AdminUserService {
      * @param status 状态
      */
     void updateUserStatus(Long id, Integer status);
+
+    /**
+     * 获得用户分页列表
+     *
+     * @param reqVO 分页条件
+     * @return 分页列表
+     */
+    PageResult<AdminUserDO> getUserPage(UserPageReqVO reqVO);
+
+    /**
+     * 获得指定状态的用户们
+     *
+     * @param status 状态
+     * @return 用户们
+     */
+    List<AdminUserDO> getUserListByStatus(Integer status);
+
+    /**
+     * 通过用户 ID 查询用户
+     *
+     * @param id 用户ID
+     * @return 用户对象信息
+     */
+    AdminUserDO getUser(Long id);
 
 }

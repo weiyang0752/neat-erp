@@ -1,22 +1,33 @@
 package com.neaterp.module.system.controller.admin.user;
 
+import cn.hutool.core.collection.CollUtil;
+import com.neaterp.framework.common.enums.CommonStatusEnum;
 import com.neaterp.framework.common.pojo.CommonResult;
-import com.neaterp.module.system.controller.admin.user.vo.user.UserSaveReqVO;
-import com.neaterp.module.system.controller.admin.user.vo.user.UserUpdatePasswordReqVO;
-import com.neaterp.module.system.controller.admin.user.vo.user.UserUpdateStatusReqVO;
+import com.neaterp.framework.common.pojo.PageParam;
+import com.neaterp.framework.common.pojo.PageResult;
+import com.neaterp.framework.excel.core.util.ExcelUtils;
+import com.neaterp.module.system.controller.admin.user.vo.user.*;
+import com.neaterp.module.system.convert.user.UserConvert;
+import com.neaterp.module.system.dal.dataobject.dept.DeptDO;
+import com.neaterp.module.system.dal.dataobject.user.AdminUserDO;
+import com.neaterp.module.system.service.dept.DeptService;
 import com.neaterp.module.system.service.user.AdminUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import static com.neaterp.framework.common.pojo.CommonResult.success;
+import static com.neaterp.framework.common.util.collection.CollectionUtils.convertList;
 
 @Tag(name = "管理后台 - 用户")
 @RestController
@@ -26,6 +37,8 @@ public class UserController {
 
     @Resource
     private AdminUserService userService;
+    @Resource
+    private DeptService deptService;
 
 
     @PostMapping("/create")
@@ -76,6 +89,62 @@ public class UserController {
     public CommonResult<Boolean> updateUserStatus(@Valid @RequestBody UserUpdateStatusReqVO reqVO) {
         userService.updateUserStatus(reqVO.getId(), reqVO.getStatus());
         return success(true);
+    }
+
+    @GetMapping("/page")
+    @Operation(summary = "获得用户分页列表")
+    @PreAuthorize("@ss.hasPermission('system:user:query')")
+    public CommonResult<PageResult<UserRespVO>> getUserPage(@Valid UserPageReqVO pageReqVO) {
+        // 获得用户分页列表
+        PageResult<AdminUserDO> pageResult = userService.getUserPage(pageReqVO);
+        if (CollUtil.isEmpty(pageResult.getList())) {
+            return success(new PageResult<>(pageResult.getTotal()));
+        }
+        // 拼接数据
+        Map<Long, DeptDO> deptMap = deptService.getDeptMap(
+                convertList(pageResult.getList(), AdminUserDO::getDeptId));
+        return success(new PageResult<>(UserConvert.INSTANCE.convertList(pageResult.getList(), deptMap),
+                pageResult.getTotal()));
+    }
+
+    @GetMapping({"/list-all-simple", "/simple-list"})
+    @Operation(summary = "获取用户精简信息列表", description = "只包含被开启的用户，主要用于前端的下拉选项")
+    public CommonResult<List<UserSimpleRespVO>> getSimpleUserList() {
+        List<AdminUserDO> list = userService.getUserListByStatus(CommonStatusEnum.ENABLE.getStatus());
+        // 拼接数据
+        Map<Long, DeptDO> deptMap = deptService.getDeptMap(
+                convertList(list, AdminUserDO::getDeptId));
+        return success(UserConvert.INSTANCE.convertSimpleList(list, deptMap));
+    }
+
+    @GetMapping("/get")
+    @Operation(summary = "获得用户详情")
+    @Parameter(name = "id", description = "编号", required = true, example = "1024")
+    @PreAuthorize("@ss.hasPermission('system:user:query')")
+    public CommonResult<UserRespVO> getUser(@RequestParam("id") Long id) {
+        AdminUserDO user = userService.getUser(id);
+        if (user == null) {
+            return success(null);
+        }
+        // 拼接数据
+        DeptDO dept = deptService.getDept(user.getDeptId());
+        return success(UserConvert.INSTANCE.convert(user, dept));
+    }
+
+
+    @GetMapping("/export-excel")
+    @Operation(summary = "导出用户")
+    @PreAuthorize("@ss.hasPermission('system:user:export')")
+//    @ApiAccessLog(operateType = EXPORT)
+    public void exportUserList(@Validated UserPageReqVO exportReqVO,
+                               HttpServletResponse response) throws IOException {
+        exportReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
+        List<AdminUserDO> list = userService.getUserPage(exportReqVO).getList();
+        // 输出 Excel
+        Map<Long, DeptDO> deptMap = deptService.getDeptMap(
+                convertList(list, AdminUserDO::getDeptId));
+        ExcelUtils.write(response, "用户数据.xls", "数据", UserRespVO.class,
+                UserConvert.INSTANCE.convertList(list, deptMap));
     }
 
 }

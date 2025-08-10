@@ -4,6 +4,7 @@ import com.neaterp.framework.common.util.collection.CollectionUtils;
 import com.neaterp.module.system.dal.dataobject.dept.DeptDO;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +42,24 @@ public interface DeptService {
         List<DeptDO> list = getDeptList(ids);
         return CollectionUtils.convertMap(list, DeptDO::getId);
     }
+
+    /**
+     * 获得指定部门的所有子部门
+     *
+     * @param id 部门编号
+     * @return 子部门列表
+     */
+    default List<DeptDO> getChildDeptList(Long id) {
+        return getChildDeptList(Collections.singleton(id));
+    }
+
+    /**
+     * 获得指定部门的所有子部门
+     *
+     * @param ids 部门编号数组
+     * @return 子部门列表
+     */
+    List<DeptDO> getChildDeptList(Collection<Long> ids);
 
     /**
      * 校验部门们是否有效。如下情况，视为无效：

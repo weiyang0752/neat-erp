@@ -1,3 +1,4 @@
 com.neaterp.framework.web.config.NeaterpWebAutoConfiguration
 com.neaterp.framework.xss.config.NeaterpXssAutoConfiguration
 com.neaterp.framework.swagger.config.NeaterpSwaggerAutoConfiguration
+com.neaterp.framework.apilog.config.NeaterpApiLogAutoConfiguration

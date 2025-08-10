@@ -1,5 +1,8 @@
 package com.neaterp.module.system.service.permission;
 
+import java.util.Collection;
+import java.util.Set;
+
 /**
  * 权限 Service 接口
  * <p>
@@ -17,5 +20,12 @@ public interface PermissionService {
      */
     void processUserDeleted(Long userId);
 
+    /**
+     * 获得拥有多个角色的用户编号集合
+     *
+     * @param roleIds 角色编号集合
+     * @return 用户编号集合
+     */
+    Set<Long> getUserRoleIdListByRoleId(Collection<Long> roleIds);
 
 }
