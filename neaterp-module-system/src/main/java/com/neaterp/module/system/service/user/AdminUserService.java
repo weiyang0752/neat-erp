@@ -1,6 +1,8 @@
 package com.neaterp.module.system.service.user;
 
 import com.neaterp.framework.common.pojo.PageResult;
+import com.neaterp.module.system.controller.admin.user.vo.user.UserImportExcelVO;
+import com.neaterp.module.system.controller.admin.user.vo.user.UserImportRespVO;
 import com.neaterp.module.system.controller.admin.user.vo.user.UserPageReqVO;
 import com.neaterp.module.system.controller.admin.user.vo.user.UserSaveReqVO;
 import com.neaterp.module.system.dal.dataobject.user.AdminUserDO;
@@ -84,5 +86,14 @@ public interface AdminUserService {
      * @return 用户对象信息
      */
     AdminUserDO getUser(Long id);
+
+    /**
+     * 批量导入用户
+     *
+     * @param importUsers     导入用户列表
+     * @param isUpdateSupport 是否支持更新
+     * @return 导入结果
+     */
+    UserImportRespVO importUserList(List<UserImportExcelVO> importUsers, boolean isUpdateSupport);
 
 }

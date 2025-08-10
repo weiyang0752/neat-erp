@@ -1,6 +1,7 @@
 package com.neaterp.module.system.controller.admin.user;
 
 import cn.hutool.core.collection.CollUtil;
+import com.neaterp.framework.apilog.core.annotation.ApiAccessLog;
 import com.neaterp.framework.common.enums.CommonStatusEnum;
 import com.neaterp.framework.common.pojo.CommonResult;
 import com.neaterp.framework.common.pojo.PageParam;
@@ -10,10 +11,12 @@ import com.neaterp.module.system.controller.admin.user.vo.user.*;
 import com.neaterp.module.system.convert.user.UserConvert;
 import com.neaterp.module.system.dal.dataobject.dept.DeptDO;
 import com.neaterp.module.system.dal.dataobject.user.AdminUserDO;
+import com.neaterp.module.system.enums.common.SexEnum;
 import com.neaterp.module.system.service.dept.DeptService;
 import com.neaterp.module.system.service.user.AdminUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,11 +24,14 @@ import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static com.neaterp.framework.apilog.core.enums.OperateTypeEnum.EXPORT;
 import static com.neaterp.framework.common.pojo.CommonResult.success;
 import static com.neaterp.framework.common.util.collection.CollectionUtils.convertList;
 
@@ -131,11 +137,10 @@ public class UserController {
         return success(UserConvert.INSTANCE.convert(user, dept));
     }
 
-
     @GetMapping("/export-excel")
     @Operation(summary = "导出用户")
     @PreAuthorize("@ss.hasPermission('system:user:export')")
-//    @ApiAccessLog(operateType = EXPORT)
+    @ApiAccessLog(operateType = EXPORT)
     public void exportUserList(@Validated UserPageReqVO exportReqVO,
                                HttpServletResponse response) throws IOException {
         exportReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
@@ -145,6 +150,33 @@ public class UserController {
                 convertList(list, AdminUserDO::getDeptId));
         ExcelUtils.write(response, "用户数据.xls", "数据", UserRespVO.class,
                 UserConvert.INSTANCE.convertList(list, deptMap));
+    }
+
+    @GetMapping("/get-import-template")
+    @Operation(summary = "获得导入用户模板")
+    public void importTemplate(HttpServletResponse response) throws IOException {
+        // 手动创建导出 demo
+        List<UserImportExcelVO> list = Arrays.asList(
+                UserImportExcelVO.builder().username("yunai").deptId(1L).email("yunai@iocoder.cn").mobile("15601691300")
+                        .nickname("芋道").status(CommonStatusEnum.ENABLE.getStatus()).sex(SexEnum.MALE.getSex()).build(),
+                UserImportExcelVO.builder().username("yuanma").deptId(2L).email("yuanma@iocoder.cn").mobile("15601701300")
+                        .nickname("源码").status(CommonStatusEnum.DISABLE.getStatus()).sex(SexEnum.FEMALE.getSex()).build()
+        );
+        // 输出
+        ExcelUtils.write(response, "用户导入模板.xls", "用户列表", UserImportExcelVO.class, list);
+    }
+
+    @PostMapping("/import")
+    @Operation(summary = "导入用户")
+    @Parameters({
+            @Parameter(name = "file", description = "Excel 文件", required = true),
+            @Parameter(name = "updateSupport", description = "是否支持更新，默认为 false", example = "true")
+    })
+    @PreAuthorize("@ss.hasPermission('system:user:import')")
+    public CommonResult<UserImportRespVO> importExcel(@RequestParam("file") MultipartFile file,
+                                                      @RequestParam(value = "updateSupport", required = false, defaultValue = "false") Boolean updateSupport) throws Exception {
+        List<UserImportExcelVO> list = ExcelUtils.read(file, UserImportExcelVO.class);
+        return success(userService.importUserList(list, updateSupport));
     }
 
 }
