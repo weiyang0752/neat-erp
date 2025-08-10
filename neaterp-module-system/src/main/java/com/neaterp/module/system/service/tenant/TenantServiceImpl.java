@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
+
 /**
  * 租户 Service 实现类
  *
@@ -32,6 +34,16 @@ public class TenantServiceImpl implements TenantService {
     @Override
     public TenantDO getTenant(Long id) {
         return tenantMapper.selectById(id);
+    }
+
+    @Override
+    public TenantDO getTenantByName(String name) {
+        return tenantMapper.selectByName(name);
+    }
+
+    @Override
+    public List<TenantDO> getTenantListByStatus(Integer status) {
+        return tenantMapper.selectListByStatus(status);
     }
 
     @Override
