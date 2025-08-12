@@ -1,8 +1,10 @@
 package com.neaterp.module.system.service.tenant;
 
 import com.neaterp.framework.tenant.core.context.TenantContextHolder;
+import com.neaterp.module.system.controller.admin.tenant.vo.tenant.TenantSaveReqVO;
 import com.neaterp.module.system.dal.dataobject.tenant.TenantDO;
 import com.neaterp.module.system.service.tenant.handler.TenantInfoHandler;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -12,6 +14,14 @@ import java.util.List;
  * @author 芋道源码
  */
 public interface TenantService {
+
+    /**
+     * 创建租户
+     *
+     * @param createReqVO 创建信息
+     * @return 编号
+     */
+    Long createTenant(@Valid TenantSaveReqVO createReqVO);
 
     /**
      * 获得租户
@@ -28,6 +38,14 @@ public interface TenantService {
      * @return 租户
      */
     TenantDO getTenantByName(String name);
+
+    /**
+     * 获得域名对应的租户
+     *
+     * @param website 域名
+     * @return 租户
+     */
+    TenantDO getTenantByWebsite(String website);
 
     /**
      * 获得指定状态的租户列表

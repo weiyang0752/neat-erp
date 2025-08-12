@@ -44,7 +44,7 @@
         <lombok.version>1.18.38</lombok.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <hutool-5.version>5.8.35</hutool-5.version>
-        <easyexcel.version>4.0.3</easyexcel.version>
+        <fastexcel.version>1.2.0</fastexcel.version>
         <velocity.version>2.4.1</velocity.version>
         <guava.version>33.4.8-jre</guava.version>
         <tika-core.version>3.1.0</tika-core.version>
@@ -282,9 +282,9 @@
                 <version>${hutool-5.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>easyexcel</artifactId>
-                <version>${easyexcel.version}</version>
+                <groupId>cn.idev.excel</groupId>
+                <artifactId>fastexcel</artifactId>
+                <version>${fastexcel.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.tika</groupId>

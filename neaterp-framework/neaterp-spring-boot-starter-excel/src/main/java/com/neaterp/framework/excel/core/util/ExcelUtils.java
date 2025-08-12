@@ -1,8 +1,8 @@
 package com.neaterp.framework.excel.core.util;
 
-import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.converters.longconverter.LongStringConverter;
-import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
+import cn.idev.excel.EasyExcel;
+import cn.idev.excel.converters.longconverter.LongStringConverter;
+import cn.idev.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
 import com.neaterp.framework.common.util.http.HttpUtils;
 import com.neaterp.framework.excel.core.handler.SelectSheetWriteHandler;
 import jakarta.servlet.http.HttpServletResponse;

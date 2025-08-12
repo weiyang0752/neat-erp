@@ -1,0 +1,93 @@
+package com.neaterp.module.system.service.permission;
+
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.ObjectUtil;
+import com.google.common.annotations.VisibleForTesting;
+import com.mzt.logapi.context.LogRecordContext;
+import com.mzt.logapi.starter.annotation.LogRecord;
+import com.neaterp.framework.common.enums.CommonStatusEnum;
+import com.neaterp.framework.common.util.object.BeanUtils;
+import com.neaterp.module.system.controller.admin.permission.vo.role.RoleSaveReqVO;
+import com.neaterp.module.system.dal.dataobject.permission.RoleDO;
+import com.neaterp.module.system.dal.mysql.permission.RoleMapper;
+import com.neaterp.module.system.enums.permission.DataScopeEnum;
+import com.neaterp.module.system.enums.permission.RoleCodeEnum;
+import com.neaterp.module.system.enums.permission.RoleTypeEnum;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
+import static com.neaterp.framework.common.exception.util.ServiceExceptionUtil.exception;
+import static com.neaterp.module.system.enums.ErrorCodeConstants.*;
+import static com.neaterp.module.system.enums.LogRecordConstants.*;
+
+/**
+ * 角色 Service 实现类
+ *
+ * @author 芋道源码
+ */
+@Service
+@Slf4j
+public class RoleServiceImpl implements RoleService {
+
+
+    @Resource
+    private RoleMapper roleMapper;
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    @LogRecord(type = SYSTEM_ROLE_TYPE, subType = SYSTEM_ROLE_CREATE_SUB_TYPE, bizNo = "{{#role.id}}",
+            success = SYSTEM_ROLE_CREATE_SUCCESS)
+    public Long createRole(RoleSaveReqVO createReqVO, Integer type) {
+        // 1. 校验角色
+        validateRoleDuplicate(createReqVO.getName(), createReqVO.getCode(), null);
+
+        // 2. 插入到数据库
+        RoleDO role = BeanUtils.toBean(createReqVO, RoleDO.class)
+                .setType(ObjectUtil.defaultIfNull(type, RoleTypeEnum.CUSTOM.getType()))
+                .setStatus(ObjUtil.defaultIfNull(createReqVO.getStatus(), CommonStatusEnum.ENABLE.getStatus()))
+                .setDataScope(DataScopeEnum.ALL.getScope()); // 默认可查看所有数据。原因是，可能一些项目不需要项目权限
+        roleMapper.insert(role);
+
+        // 3. 记录操作日志上下文
+        LogRecordContext.putVariable("role", role);
+        return role.getId();
+    }
+
+    /**
+     * 校验角色的唯一字段是否重复
+     *
+     * 1. 是否存在相同名字的角色
+     * 2. 是否存在相同编码的角色
+     *
+     * @param name 角色名字
+     * @param code 角色额编码
+     * @param id 角色编号
+     */
+    @VisibleForTesting
+    void validateRoleDuplicate(String name, String code, Long id) {
+        // 0. 超级管理员，不允许创建
+        if (RoleCodeEnum.isSuperAdmin(code)) {
+            throw exception(ROLE_ADMIN_CODE_ERROR, code);
+        }
+        // 1. 该 name 名字被其它角色所使用
+        RoleDO role = roleMapper.selectByName(name);
+        if (role != null && !role.getId().equals(id)) {
+            throw exception(ROLE_NAME_DUPLICATE, name);
+        }
+        // 2. 是否存在相同编码的角色
+        if (!StringUtils.hasText(code)) {
+            return;
+        }
+        // 该 code 编码被其它角色所使用
+        role = roleMapper.selectByCode(code);
+        if (role != null && !role.getId().equals(id)) {
+            throw exception(ROLE_CODE_DUPLICATE, code);
+        }
+    }
+
+
+}

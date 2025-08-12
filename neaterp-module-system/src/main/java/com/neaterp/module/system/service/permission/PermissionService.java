@@ -13,12 +13,36 @@ import java.util.Set;
 public interface PermissionService {
 
 
+
+
+
+    // ========== 用户-角色的相关方法  ==========
+
     /**
      * 处理用户删除时，删除关联授权数据
      *
      * @param userId 用户编号
      */
     void processUserDeleted(Long userId);
+
+    /**
+     * 设置用户角色
+     *
+     * @param userId  角色编号
+     * @param roleIds 角色编号集合
+     */
+    void assignUserRole(Long userId, Set<Long> roleIds);
+
+    // ========== 角色-菜单的相关方法  ==========
+
+    /**
+     * 设置角色菜单
+     *
+     * @param roleId  角色编号
+     * @param menuIds 菜单编号集合
+     */
+    void assignRoleMenu(Long roleId, Set<Long> menuIds);
+
 
     /**
      * 获得拥有多个角色的用户编号集合

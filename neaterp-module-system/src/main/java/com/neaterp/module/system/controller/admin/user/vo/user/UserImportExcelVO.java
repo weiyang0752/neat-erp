@@ -1,6 +1,6 @@
 package com.neaterp.module.system.controller.admin.user.vo.user;
 
-import com.alibaba.excel.annotation.ExcelProperty;
+import cn.idev.excel.annotation.ExcelProperty;
 import com.neaterp.framework.excel.core.annotations.DictFormat;
 import com.neaterp.framework.excel.core.convert.DictConvert;
 import com.neaterp.module.system.enums.DictTypeConstants;

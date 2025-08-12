@@ -1,7 +1,9 @@
 package com.neaterp.module.system.controller.admin.tenant;
 
+import com.neaterp.framework.common.enums.CommonStatusEnum;
 import com.neaterp.framework.common.pojo.CommonResult;
 import com.neaterp.framework.tenant.core.aop.TenantIgnore;
+import com.neaterp.module.system.controller.admin.tenant.vo.tenant.TenantRespVO;
 import com.neaterp.module.system.dal.dataobject.tenant.TenantDO;
 import com.neaterp.module.system.service.tenant.TenantService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 import static com.neaterp.framework.common.pojo.CommonResult.success;
+import static com.neaterp.framework.common.util.collection.CollectionUtils.convertList;
 
 @Tag(name = "管理后台 - 租户")
 @RestController
@@ -33,6 +38,42 @@ public class TenantController {
         TenantDO tenant = tenantService.getTenantByName(name);
         return success(tenant != null ? tenant.getId() : null);
     }
+
+    @GetMapping({ "simple-list" })
+    @PermitAll
+    @TenantIgnore
+    @Operation(summary = "获取租户精简信息列表", description = "只包含被开启的租户，用于【首页】功能的选择租户选项")
+    public CommonResult<List<TenantRespVO>> getTenantSimpleList() {
+        List<TenantDO> list = tenantService.getTenantListByStatus(CommonStatusEnum.ENABLE.getStatus());
+        return success(convertList(list, tenantDO ->
+                new TenantRespVO().setId(tenantDO.getId()).setName(tenantDO.getName())));
+    }
+
+    @GetMapping("/get-by-website")
+    @PermitAll
+    @TenantIgnore
+    @Operation(summary = "使用域名，获得租户信息", description = "登录界面，根据用户的域名，获得租户信息")
+    @Parameter(name = "website", description = "域名", required = true, example = "www.iocoder.cn")
+    public CommonResult<TenantRespVO> getTenantByWebsite(@RequestParam("website") String website) {
+        TenantDO tenant = tenantService.getTenantByWebsite(website);
+        if (tenant == null || CommonStatusEnum.isDisable(tenant.getStatus())) {
+            return success(null);
+        }
+        return success(new TenantRespVO().setId(tenant.getId()).setName(tenant.getName()));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
