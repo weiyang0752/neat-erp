@@ -96,6 +96,22 @@ public interface TenantService {
     List<TenantDO> getTenantListByStatus(Integer status);
 
     /**
+     * 获得使用指定套餐的租户数组
+     *
+     * @param packageId 租户套餐编号
+     * @return 租户数组
+     */
+    List<TenantDO> getTenantListByPackageId(Long packageId);
+
+    /**
+     * 获得使用指定套餐的租户数量
+     *
+     * @param packageId 租户套餐编号
+     * @return 租户数量
+     */
+    Long getTenantCountByPackageId(Long packageId);
+
+    /**
      * 进行租户的信息处理逻辑
      * 其中，租户编号从 {@link TenantContextHolder} 上下文中获取
      *

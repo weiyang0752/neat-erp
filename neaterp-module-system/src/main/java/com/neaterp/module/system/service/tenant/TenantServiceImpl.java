@@ -251,6 +251,16 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
+    public List<TenantDO> getTenantListByPackageId(Long packageId) {
+        return tenantMapper.selectListByPackageId(packageId);
+    }
+
+    @Override
+    public Long getTenantCountByPackageId(Long packageId) {
+        return tenantMapper.selectCountByPackageId(packageId);
+    }
+
+    @Override
     public void handleTenantInfo(TenantInfoHandler handler) {
         // 如果禁用，则不执行逻辑
         if (isTenantDisable()) {
