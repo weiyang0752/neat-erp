@@ -1,12 +1,15 @@
 package com.neaterp.module.system.service.tenant;
 
+import com.neaterp.framework.common.pojo.PageResult;
 import com.neaterp.framework.tenant.core.context.TenantContextHolder;
+import com.neaterp.module.system.controller.admin.tenant.vo.tenant.TenantPageReqVO;
 import com.neaterp.module.system.controller.admin.tenant.vo.tenant.TenantSaveReqVO;
 import com.neaterp.module.system.dal.dataobject.tenant.TenantDO;
 import com.neaterp.module.system.service.tenant.handler.TenantInfoHandler;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 租户 Service 接口
@@ -24,12 +27,49 @@ public interface TenantService {
     Long createTenant(@Valid TenantSaveReqVO createReqVO);
 
     /**
+     * 更新租户
+     *
+     * @param updateReqVO 更新信息
+     */
+    void updateTenant(@Valid TenantSaveReqVO updateReqVO);
+
+    /**
+     * 更新租户的角色菜单
+     *
+     * @param tenantId 租户编号
+     * @param menuIds  菜单编号数组
+     */
+    void updateTenantRoleMenu(Long tenantId, Set<Long> menuIds);
+
+    /**
+     * 删除租户
+     *
+     * @param id 编号
+     */
+    void deleteTenant(Long id);
+
+    /**
+     * 批量删除租户
+     *
+     * @param ids 编号数组
+     */
+    void deleteTenantList(List<Long> ids);
+
+    /**
      * 获得租户
      *
      * @param id 编号
      * @return 租户
      */
     TenantDO getTenant(Long id);
+
+    /**
+     * 获得租户分页
+     *
+     * @param pageReqVO 分页查询
+     * @return 租户分页
+     */
+    PageResult<TenantDO> getTenantPage(TenantPageReqVO pageReqVO);
 
     /**
      * 获得名字对应的租户

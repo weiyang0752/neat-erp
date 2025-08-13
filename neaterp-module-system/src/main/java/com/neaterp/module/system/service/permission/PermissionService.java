@@ -3,6 +3,8 @@ package com.neaterp.module.system.service.permission;
 import java.util.Collection;
 import java.util.Set;
 
+import static java.util.Collections.singleton;
+
 /**
  * 权限 Service 接口
  * <p>
@@ -51,5 +53,23 @@ public interface PermissionService {
      * @return 用户编号集合
      */
     Set<Long> getUserRoleIdListByRoleId(Collection<Long> roleIds);
+
+    /**
+     * 获得角色们拥有的菜单编号集合
+     *
+     * @param roleIds 角色编号数组
+     * @return 菜单编号集合
+     */
+    Set<Long> getRoleMenuListByRoleId(Collection<Long> roleIds);
+
+    /**
+     * 获得角色拥有的菜单编号集合
+     *
+     * @param roleId 角色编号
+     * @return 菜单编号集合
+     */
+    default Set<Long> getRoleMenuListByRoleId(Long roleId) {
+        return getRoleMenuListByRoleId(singleton(roleId));
+    }
 
 }

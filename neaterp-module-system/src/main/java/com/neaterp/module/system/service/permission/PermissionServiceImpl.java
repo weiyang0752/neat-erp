@@ -3,6 +3,7 @@ package com.neaterp.module.system.service.permission;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.neaterp.framework.common.util.collection.CollectionUtils;
+import com.neaterp.module.system.dal.dataobject.permission.MenuDO;
 import com.neaterp.module.system.dal.dataobject.permission.RoleMenuDO;
 import com.neaterp.module.system.dal.dataobject.permission.UserRoleDO;
 import com.neaterp.module.system.dal.mysql.permission.RoleMenuMapper;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 
 import static com.neaterp.framework.common.util.collection.CollectionUtils.convertSet;
@@ -34,6 +36,12 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Resource
     private RoleMenuMapper roleMenuMapper;
+
+    @Resource
+    private RoleService roleService;
+
+    @Resource
+    private MenuService menuService;
 
 
     @Override
@@ -99,5 +107,19 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public Set<Long> getUserRoleIdListByRoleId(Collection<Long> roleIds) {
         return convertSet(userRoleMapper.selectListByRoleIds(roleIds), UserRoleDO::getUserId);
+    }
+
+    @Override
+    public Set<Long> getRoleMenuListByRoleId(Collection<Long> roleIds) {
+        if (CollUtil.isEmpty(roleIds)) {
+            return Collections.emptySet();
+        }
+
+        // 如果是管理员的情况下，获取全部菜单编号
+        if (roleService.hasAnySuperAdmin(roleIds)) {
+            return convertSet(menuService.getMenuList(), MenuDO::getId);
+        }
+        // 如果是非管理员的情况下，获得拥有的菜单编号
+        return convertSet(roleMenuMapper.selectListByRoleId(roleIds), RoleMenuDO::getMenuId);
     }
 }

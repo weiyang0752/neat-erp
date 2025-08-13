@@ -1,7 +1,9 @@
 package com.neaterp.module.system.service.permission;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.annotations.VisibleForTesting;
 import com.mzt.logapi.context.LogRecordContext;
 import com.mzt.logapi.starter.annotation.LogRecord;
@@ -10,14 +12,19 @@ import com.neaterp.framework.common.util.object.BeanUtils;
 import com.neaterp.module.system.controller.admin.permission.vo.role.RoleSaveReqVO;
 import com.neaterp.module.system.dal.dataobject.permission.RoleDO;
 import com.neaterp.module.system.dal.mysql.permission.RoleMapper;
+import com.neaterp.module.system.dal.redis.RedisKeyConstants;
 import com.neaterp.module.system.enums.permission.DataScopeEnum;
 import com.neaterp.module.system.enums.permission.RoleCodeEnum;
 import com.neaterp.module.system.enums.permission.RoleTypeEnum;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
+import java.util.Collection;
+import java.util.List;
 
 import static com.neaterp.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.neaterp.module.system.enums.ErrorCodeConstants.*;
@@ -57,6 +64,30 @@ public class RoleServiceImpl implements RoleService {
         return role.getId();
     }
 
+    @Override
+    public List<RoleDO> getRoleList() {
+        return roleMapper.selectList();
+    }
+
+    @Override
+    public boolean hasAnySuperAdmin(Collection<Long> ids) {
+        if (CollectionUtil.isEmpty(ids)) {
+            return false;
+        }
+        RoleServiceImpl self = getSelf();
+        return ids.stream().anyMatch(id -> {
+            RoleDO role = self.getRoleFromCache(id);
+            return role != null && RoleCodeEnum.isSuperAdmin(role.getCode());
+        });
+    }
+
+    @Override
+    @Cacheable(value = RedisKeyConstants.ROLE, key = "#id",
+            unless = "#result == null")
+    public RoleDO getRoleFromCache(Long id) {
+        return roleMapper.selectById(id);
+    }
+
     /**
      * 校验角色的唯一字段是否重复
      *
@@ -87,6 +118,16 @@ public class RoleServiceImpl implements RoleService {
         if (role != null && !role.getId().equals(id)) {
             throw exception(ROLE_CODE_DUPLICATE, code);
         }
+    }
+
+
+    /**
+     * 获得自身的代理对象，解决 AOP 生效问题
+     *
+     * @return 自己
+     */
+    private RoleServiceImpl getSelf() {
+        return SpringUtil.getBean(getClass());
     }
 
 
