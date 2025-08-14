@@ -1,8 +1,13 @@
 package com.neaterp.module.system.service.dept;
 
+import com.neaterp.framework.common.pojo.PageResult;
+import com.neaterp.module.system.controller.admin.dept.vo.post.PostPageReqVO;
+import com.neaterp.module.system.controller.admin.dept.vo.post.PostSaveReqVO;
 import com.neaterp.module.system.dal.dataobject.dept.PostDO;
+import org.springframework.lang.Nullable;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * 岗位 Service 接口
@@ -12,6 +17,28 @@ import java.util.Collection;
 public interface PostService {
 
     /**
+     * 创建岗位
+     *
+     * @param createReqVO 岗位信息
+     * @return 岗位编号
+     */
+    Long createPost(PostSaveReqVO createReqVO);
+
+    /**
+     * 更新岗位
+     *
+     * @param updateReqVO 岗位信息
+     */
+    void updatePost(PostSaveReqVO updateReqVO);
+
+    /**
+     * 删除岗位信息
+     *
+     * @param id 岗位编号
+     */
+    void deletePost(Long id);
+
+    /**
      * 获得岗位信息
      *
      * @param id 岗位编号
@@ -19,7 +46,23 @@ public interface PostService {
      */
     PostDO getPost(Long id);
 
+    /**
+     * 获得符合条件的岗位列表
+     *
+     * @param ids 岗位编号数组。如果为空，不进行筛选
+     * @param statuses 状态数组。如果为空，不进行筛选
+     * @return 部门列表
+     */
+    List<PostDO> getPostList(@Nullable Collection<Long> ids,
+                             @Nullable Collection<Integer> statuses);
 
+    /**
+     * 获得岗位分页列表
+     *
+     * @param reqVO 分页条件
+     * @return 部门分页列表
+     */
+    PageResult<PostDO> getPostPage(PostPageReqVO reqVO);
 
     /**
      * 校验岗位们是否有效。如下情况，视为无效：
