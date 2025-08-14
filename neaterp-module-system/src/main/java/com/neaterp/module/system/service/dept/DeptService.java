@@ -1,6 +1,8 @@
 package com.neaterp.module.system.service.dept;
 
 import com.neaterp.framework.common.util.collection.CollectionUtils;
+import com.neaterp.module.system.controller.admin.dept.vo.dept.DeptListReqVO;
+import com.neaterp.module.system.controller.admin.dept.vo.dept.DeptSaveReqVO;
 import com.neaterp.module.system.dal.dataobject.dept.DeptDO;
 
 import java.util.Collection;
@@ -15,6 +17,27 @@ import java.util.Map;
  */
 public interface DeptService {
 
+    /**
+     * 创建部门
+     *
+     * @param createReqVO 部门信息
+     * @return 部门编号
+     */
+    Long createDept(DeptSaveReqVO createReqVO);
+
+    /**
+     * 更新部门
+     *
+     * @param updateReqVO 部门信息
+     */
+    void updateDept(DeptSaveReqVO updateReqVO);
+
+    /**
+     * 删除部门
+     *
+     * @param id 部门编号
+     */
+    void deleteDept(Long id);
 
     /**
      * 获得部门信息
@@ -31,6 +54,14 @@ public interface DeptService {
      * @return 部门信息数组
      */
     List<DeptDO> getDeptList(Collection<Long> ids);
+
+    /**
+     * 筛选部门列表
+     *
+     * @param reqVO 筛选条件请求 VO
+     * @return 部门列表
+     */
+    List<DeptDO> getDeptList(DeptListReqVO reqVO);
 
     /**
      * 获得指定编号的部门 Map
