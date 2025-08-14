@@ -6,6 +6,7 @@ import com.neaterp.module.system.controller.admin.tenant.vo.tenant.TenantPageReq
 import com.neaterp.module.system.controller.admin.tenant.vo.tenant.TenantSaveReqVO;
 import com.neaterp.module.system.dal.dataobject.tenant.TenantDO;
 import com.neaterp.module.system.service.tenant.handler.TenantInfoHandler;
+import com.neaterp.module.system.service.tenant.handler.TenantMenuHandler;
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -118,6 +119,14 @@ public interface TenantService {
      * @param handler 处理器
      */
     void handleTenantInfo(TenantInfoHandler handler);
+
+    /**
+     * 进行租户的菜单处理逻辑
+     * 其中，租户编号从 {@link TenantContextHolder} 上下文中获取
+     *
+     * @param handler 处理器
+     */
+    void handleTenantMenu(TenantMenuHandler handler);
 
 
 }

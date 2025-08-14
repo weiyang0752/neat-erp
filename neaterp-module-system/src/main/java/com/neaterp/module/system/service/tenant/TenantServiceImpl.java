@@ -5,6 +5,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.neaterp.framework.common.pojo.PageResult;
+import com.neaterp.framework.common.util.collection.CollectionUtils;
 import com.neaterp.framework.common.util.object.BeanUtils;
 import com.neaterp.framework.datapermission.core.annotation.DataPermission;
 import com.neaterp.framework.tenant.config.TenantProperties;
@@ -14,15 +15,18 @@ import com.neaterp.module.system.controller.admin.permission.vo.role.RoleSaveReq
 import com.neaterp.module.system.controller.admin.tenant.vo.tenant.TenantPageReqVO;
 import com.neaterp.module.system.controller.admin.tenant.vo.tenant.TenantSaveReqVO;
 import com.neaterp.module.system.convert.tenant.TenantConvert;
+import com.neaterp.module.system.dal.dataobject.permission.MenuDO;
 import com.neaterp.module.system.dal.dataobject.permission.RoleDO;
 import com.neaterp.module.system.dal.dataobject.tenant.TenantDO;
 import com.neaterp.module.system.dal.dataobject.tenant.TenantPackageDO;
 import com.neaterp.module.system.dal.mysql.tenant.TenantMapper;
 import com.neaterp.module.system.enums.permission.RoleCodeEnum;
 import com.neaterp.module.system.enums.permission.RoleTypeEnum;
+import com.neaterp.module.system.service.permission.MenuService;
 import com.neaterp.module.system.service.permission.PermissionService;
 import com.neaterp.module.system.service.permission.RoleService;
 import com.neaterp.module.system.service.tenant.handler.TenantInfoHandler;
+import com.neaterp.module.system.service.tenant.handler.TenantMenuHandler;
 import com.neaterp.module.system.service.user.AdminUserService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -65,6 +69,9 @@ public class TenantServiceImpl implements TenantService {
 
     @Resource
     private PermissionService permissionService;
+
+    @Resource
+    private MenuService menuService;
 
     @Resource
     @Lazy // 延迟，避免循环依赖报错
@@ -270,6 +277,24 @@ public class TenantServiceImpl implements TenantService {
         TenantDO tenant = getTenant(TenantContextHolder.getRequiredTenantId());
         // 执行处理器
         handler.handle(tenant);
+    }
+
+    @Override
+    public void handleTenantMenu(TenantMenuHandler handler) {
+        // 如果禁用，则不执行逻辑
+        if (isTenantDisable()) {
+            return;
+        }
+        // 获得租户，然后获得菜单
+        TenantDO tenant = getTenant(TenantContextHolder.getRequiredTenantId());
+        Set<Long> menuIds;
+        if (isSystemTenant(tenant)) { // 系统租户，菜单是全量的
+            menuIds = CollectionUtils.convertSet(menuService.getMenuList(), MenuDO::getId);
+        } else {
+            menuIds = tenantPackageService.getTenantPackage(tenant.getPackageId()).getMenuIds();
+        }
+        // 执行处理器
+        handler.handle(menuIds);
     }
 
 

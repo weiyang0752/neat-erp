@@ -122,4 +122,10 @@ public class PermissionServiceImpl implements PermissionService {
         // 如果是非管理员的情况下，获得拥有的菜单编号
         return convertSet(roleMenuMapper.selectListByRoleId(roleIds), RoleMenuDO::getMenuId);
     }
+
+    @Override
+    @CacheEvict(value = RedisKeyConstants.MENU_ROLE_ID_LIST, key = "#menuId")
+    public void processMenuDeleted(Long menuId) {
+        roleMenuMapper.deleteListByMenuId(menuId);
+    }
 }
