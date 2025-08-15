@@ -5,6 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.google.common.annotations.VisibleForTesting;
 import com.neaterp.framework.common.enums.CommonStatusEnum;
 import com.neaterp.framework.common.util.object.BeanUtils;
+import com.neaterp.framework.datapermission.core.annotation.DataPermission;
 import com.neaterp.module.system.controller.admin.dept.vo.dept.DeptListReqVO;
 import com.neaterp.module.system.controller.admin.dept.vo.dept.DeptSaveReqVO;
 import com.neaterp.module.system.dal.dataobject.dept.DeptDO;
@@ -13,6 +14,7 @@ import com.neaterp.module.system.dal.redis.RedisKeyConstants;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -124,6 +126,14 @@ public class DeptServiceImpl implements DeptService {
             parentIds = convertSet(depts, DeptDO::getId);
         }
         return children;
+    }
+
+    @Override
+    @DataPermission(enable = false) // 禁用数据权限，避免建立不正确的缓存
+    @Cacheable(cacheNames = RedisKeyConstants.DEPT_CHILDREN_ID_LIST, key = "#id")
+    public Set<Long> getChildDeptIdListFromCache(Long id) {
+        List<DeptDO> children = getChildDeptList(id);
+        return convertSet(children, DeptDO::getId);
     }
 
     @Override

@@ -5,10 +5,7 @@ import com.neaterp.module.system.controller.admin.dept.vo.dept.DeptListReqVO;
 import com.neaterp.module.system.controller.admin.dept.vo.dept.DeptSaveReqVO;
 import com.neaterp.module.system.dal.dataobject.dept.DeptDO;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 部门 Service 接口
@@ -91,6 +88,14 @@ public interface DeptService {
      * @return 子部门列表
      */
     List<DeptDO> getChildDeptList(Collection<Long> ids);
+
+    /**
+     * 获得所有子部门，从缓存中
+     *
+     * @param id 父部门编号
+     * @return 子部门列表
+     */
+    Set<Long> getChildDeptIdListFromCache(Long id);
 
     /**
      * 校验部门们是否有效。如下情况，视为无效：
