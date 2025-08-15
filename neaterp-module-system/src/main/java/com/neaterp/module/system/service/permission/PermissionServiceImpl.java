@@ -128,4 +128,19 @@ public class PermissionServiceImpl implements PermissionService {
     public void processMenuDeleted(Long menuId) {
         roleMenuMapper.deleteListByMenuId(menuId);
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    @Caching(evict = {
+            @CacheEvict(value = RedisKeyConstants.MENU_ROLE_ID_LIST,
+                    allEntries = true), // allEntries 清空所有缓存，此处无法方便获得 roleId 对应的 menu 缓存们
+            @CacheEvict(value = RedisKeyConstants.USER_ROLE_ID_LIST,
+                    allEntries = true) // allEntries 清空所有缓存，此处无法方便获得 roleId 对应的 user 缓存们
+    })
+    public void processRoleDeleted(Long roleId) {
+        // 标记删除 UserRole
+        userRoleMapper.deleteListByRoleId(roleId);
+        // 标记删除 RoleMenu
+        roleMenuMapper.deleteListByRoleId(roleId);
+    }
 }
