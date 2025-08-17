@@ -1,11 +1,13 @@
 package com.neaterp.framework.security.config;
 
 import com.neaterp.framework.common.biz.system.oauth2.OAuth2TokenCommonApi;
+import com.neaterp.framework.common.biz.system.permission.PermissionCommonApi;
 import com.neaterp.framework.security.core.context.TransmittableThreadLocalSecurityContextHolderStrategy;
 import com.neaterp.framework.security.core.filter.TokenAuthenticationFilter;
 import com.neaterp.framework.security.core.handler.AccessDeniedHandlerImpl;
 import com.neaterp.framework.security.core.handler.AuthenticationEntryPointImpl;
 import com.neaterp.framework.security.core.service.SecurityFrameworkService;
+import com.neaterp.framework.security.core.service.SecurityFrameworkServiceImpl;
 import com.neaterp.framework.web.core.handler.GlobalExceptionHandler;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
@@ -71,10 +73,10 @@ public class NeaterpSecurityAutoConfiguration {
         return new TokenAuthenticationFilter(securityProperties, globalExceptionHandler, oauth2TokenApi);
     }
 
-//    @Bean("ss") // 使用 Spring Security 的缩写，方便使用
-//    public SecurityFrameworkService securityFrameworkService(PermissionCommonApi permissionApi) {
-//        return new SecurityFrameworkServiceImpl(permissionApi);
-//    }
+    @Bean("ss") // 使用 Spring Security 的缩写，方便使用
+    public SecurityFrameworkService securityFrameworkService(PermissionCommonApi permissionApi) {
+        return new SecurityFrameworkServiceImpl(permissionApi);
+    }
 
     /**
      * 声明调用 {@link SecurityContextHolder#setStrategyName(String)} 方法，

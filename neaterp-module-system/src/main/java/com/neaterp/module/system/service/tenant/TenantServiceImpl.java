@@ -4,8 +4,10 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.neaterp.framework.common.enums.CommonStatusEnum;
 import com.neaterp.framework.common.pojo.PageResult;
 import com.neaterp.framework.common.util.collection.CollectionUtils;
+import com.neaterp.framework.common.util.date.DateUtils;
 import com.neaterp.framework.common.util.object.BeanUtils;
 import com.neaterp.framework.datapermission.core.annotation.DataPermission;
 import com.neaterp.framework.tenant.config.TenantProperties;
@@ -295,6 +297,26 @@ public class TenantServiceImpl implements TenantService {
         }
         // 执行处理器
         handler.handle(menuIds);
+    }
+
+    @Override
+    public List<Long> getTenantIdList() {
+        List<TenantDO> tenants = tenantMapper.selectList();
+        return CollectionUtils.convertList(tenants, TenantDO::getId);
+    }
+
+    @Override
+    public void validTenant(Long id) {
+        TenantDO tenant = getTenant(id);
+        if (tenant == null) {
+            throw exception(TENANT_NOT_EXISTS);
+        }
+        if (tenant.getStatus().equals(CommonStatusEnum.DISABLE.getStatus())) {
+            throw exception(TENANT_DISABLE, tenant.getName());
+        }
+        if (DateUtils.isExpired(tenant.getExpireTime())) {
+            throw exception(TENANT_EXPIRE, tenant.getName());
+        }
     }
 
 
