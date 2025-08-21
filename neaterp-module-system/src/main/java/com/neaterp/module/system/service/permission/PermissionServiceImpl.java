@@ -132,7 +132,7 @@ public class PermissionServiceImpl implements PermissionService {
     // ========== 角色-菜单的相关方法  ==========
 
     @Override
-    @DSTransactional // 多数据源，使用 @DSTransactional 保证本地事务，以及数据源的切换
+    @Transactional
     @Caching(evict = {
             @CacheEvict(value = RedisKeyConstants.MENU_ROLE_ID_LIST,
             allEntries = true),
