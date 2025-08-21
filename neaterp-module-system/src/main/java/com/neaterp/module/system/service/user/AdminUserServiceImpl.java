@@ -36,6 +36,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.neaterp.framework.common.exception.util.ServiceExceptionUtil.exception;
@@ -266,6 +267,21 @@ public class AdminUserServiceImpl implements AdminUserService {
             respVO.getUpdateUsernames().add(importUser.getUsername());
         });
         return respVO;
+    }
+
+    @Override
+    public AdminUserDO getUserByUsername(String username) {
+        return userMapper.selectByUsername(username);
+    }
+
+    @Override
+    public boolean isPasswordMatch(String rawPassword, String encodedPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
+
+    @Override
+    public void updateUserLogin(Long id, String loginIp) {
+        userMapper.updateById(new AdminUserDO().setId(id).setLoginIp(loginIp).setLoginDate(LocalDateTime.now()));
     }
 
     private void updateUserPost(UserSaveReqVO reqVO, AdminUserDO updateObj) {
