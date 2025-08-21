@@ -65,7 +65,18 @@ spring:
   # Redis 配置。Redisson 默认的配置足够使用，一般不需要进行调优
   data:
     redis:
-      host: 127.0.0.1 # 地址
+      host: 10.0.0.211 # 地址
       port: 6379 # 端口
       database: 0 # 数据库索引
-  #    password: dev # 密码，建议生产环境开启
+      password: test211 # 密码，建议生产环境开启
+
+
+# 日志文件配置
+logging:
+  file:
+    name: ${user.home}/logs/${spring.application.name}.log # 日志文件名，全路径
+  level:
+    # 配置自己写的 MyBatis Mapper 打印日志
+    com.neaterp.module.infra.dal.mysql: debug
+    com.neaterp.module.system.dal.mysql: debug
+    org.springframework.context.support.PostProcessorRegistrationDelegate: ERROR # TODO 芋艿：先禁用，Spring Boot 3.X 存在部分错误的 WARN 提示

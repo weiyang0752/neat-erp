@@ -25,13 +25,13 @@
 
         <dependency>
             <groupId>com.neaterp</groupId>
-            <artifactId>neaterp-module-system</artifactId>
+            <artifactId>neaterp-module-infra</artifactId>
             <version>${revision}</version>
         </dependency>
 
         <dependency>
             <groupId>com.neaterp</groupId>
-            <artifactId>neaterp-module-infra</artifactId>
+            <artifactId>neaterp-module-system</artifactId>
             <version>${revision}</version>
         </dependency>
 

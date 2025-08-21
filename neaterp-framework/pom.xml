@@ -37,14 +37,16 @@
     </build>
     <modules>
         <module>neaterp-common</module>
-        <module>neaterp-spring-boot-starter-web</module>
-        <module>neaterp-spring-boot-starter-security</module>
         <module>neaterp-spring-boot-starter-mybatis</module>
         <module>neaterp-spring-boot-starter-redis</module>
+        <module>neaterp-spring-boot-starter-web</module>
+        <module>neaterp-spring-boot-starter-security</module>
+
+        <module>neaterp-spring-boot-starter-excel</module>
+
         <module>neaterp-spring-boot-starter-biz-tenant</module>
         <module>neaterp-spring-boot-starter-biz-data-permission</module>
         <module>neaterp-spring-boot-starter-biz-ip</module>
-        <module>neaterp-spring-boot-starter-excel</module>
     </modules>
 
 </project>
