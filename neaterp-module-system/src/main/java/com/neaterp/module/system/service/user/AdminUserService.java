@@ -1,6 +1,7 @@
 package com.neaterp.module.system.service.user;
 
 import com.neaterp.framework.common.pojo.PageResult;
+import com.neaterp.module.system.controller.admin.auth.vo.AuthRegisterReqVO;
 import com.neaterp.module.system.controller.admin.user.vo.user.UserImportExcelVO;
 import com.neaterp.module.system.controller.admin.user.vo.user.UserImportRespVO;
 import com.neaterp.module.system.controller.admin.user.vo.user.UserPageReqVO;
@@ -120,4 +121,13 @@ public interface AdminUserService {
      * @param loginIp 登陆 IP
      */
     void updateUserLogin(Long id, String loginIp);
+
+    /**
+     * 注册用户
+     *
+     * @param registerReqVO 用户信息
+     * @return 用户编号
+     */
+    Long registerUser(@Valid AuthRegisterReqVO registerReqVO);
+
 }

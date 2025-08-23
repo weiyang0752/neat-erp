@@ -2,6 +2,7 @@ package com.neaterp.module.system.service.user;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.annotations.VisibleForTesting;
 import com.mzt.logapi.context.LogRecordContext;
@@ -15,6 +16,7 @@ import com.neaterp.framework.common.util.object.BeanUtils;
 import com.neaterp.framework.common.util.validation.ValidationUtils;
 import com.neaterp.framework.datapermission.core.util.DataPermissionUtils;
 import com.neaterp.module.infra.api.config.ConfigApi;
+import com.neaterp.module.system.controller.admin.auth.vo.AuthRegisterReqVO;
 import com.neaterp.module.system.controller.admin.user.vo.user.UserImportExcelVO;
 import com.neaterp.module.system.controller.admin.user.vo.user.UserImportRespVO;
 import com.neaterp.module.system.controller.admin.user.vo.user.UserPageReqVO;
@@ -282,6 +284,30 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Override
     public void updateUserLogin(Long id, String loginIp) {
         userMapper.updateById(new AdminUserDO().setId(id).setLoginIp(loginIp).setLoginDate(LocalDateTime.now()));
+    }
+
+    @Override
+    public Long registerUser(AuthRegisterReqVO registerReqVO) {
+        // 1.1 校验是否开启注册
+        if (ObjUtil.notEqual(configApi.getConfigValueByKey(USER_REGISTER_ENABLED_KEY), "true")) {
+            throw exception(USER_REGISTER_DISABLED);
+        }
+        // 1.2 校验账户配合
+        tenantService.handleTenantInfo(tenant -> {
+            long count = userMapper.selectCount();
+            if (count >= tenant.getAccountCount()) {
+                throw exception(USER_COUNT_MAX, tenant.getAccountCount());
+            }
+        });
+        // 1.3 校验正确性
+        validateUserForCreateOrUpdate(null, registerReqVO.getUsername(), null, null, null, null);
+
+        // 2. 插入用户
+        AdminUserDO user = BeanUtils.toBean(registerReqVO, AdminUserDO.class);
+        user.setStatus(CommonStatusEnum.ENABLE.getStatus()); // 默认开启
+        user.setPassword(encodePassword(registerReqVO.getPassword())); // 加密密码
+        userMapper.insert(user);
+        return user.getId();
     }
 
     private void updateUserPost(UserSaveReqVO reqVO, AdminUserDO updateObj) {

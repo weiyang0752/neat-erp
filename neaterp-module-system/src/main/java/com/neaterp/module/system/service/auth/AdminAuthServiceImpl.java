@@ -1,5 +1,6 @@
 package com.neaterp.module.system.service.auth;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.neaterp.framework.common.enums.CommonStatusEnum;
 import com.neaterp.framework.common.enums.UserTypeEnum;
 import com.neaterp.framework.common.util.monitor.TracerUtils;
@@ -7,6 +8,7 @@ import com.neaterp.framework.common.util.servlet.ServletUtils;
 import com.neaterp.module.system.api.logger.dto.LoginLogCreateReqDTO;
 import com.neaterp.module.system.controller.admin.auth.vo.AuthLoginReqVO;
 import com.neaterp.module.system.controller.admin.auth.vo.AuthLoginRespVO;
+import com.neaterp.module.system.controller.admin.auth.vo.AuthRegisterReqVO;
 import com.neaterp.module.system.convert.auth.AuthConvert;
 import com.neaterp.module.system.dal.dataobject.oauth2.OAuth2AccessTokenDO;
 import com.neaterp.module.system.dal.dataobject.user.AdminUserDO;
@@ -75,6 +77,50 @@ public class AdminAuthServiceImpl implements AdminAuthService {
         return createTokenAfterLoginSuccess(user.getId(), reqVO.getUsername(), LoginLogTypeEnum.LOGIN_USERNAME);
     }
 
+    @Override
+    public void logout(String token, Integer logType) {
+        // 删除访问令牌
+        OAuth2AccessTokenDO accessTokenDO = oauth2TokenService.removeAccessToken(token);
+        if (accessTokenDO == null) {
+            return;
+        }
+        // 删除成功，则记录登出日志
+        createLogoutLog(accessTokenDO.getUserId(), accessTokenDO.getUserType(), logType);
+    }
+
+    @Override
+    public AuthLoginRespVO refreshToken(String refreshToken) {
+        OAuth2AccessTokenDO accessTokenDO = oauth2TokenService.refreshAccessToken(refreshToken, OAuth2ClientConstants.CLIENT_ID_DEFAULT);
+        return AuthConvert.INSTANCE.convert(accessTokenDO);
+    }
+
+    @Override
+    public AuthLoginRespVO register(AuthRegisterReqVO registerReqVO) {
+
+        // 2. 校验用户名是否已存在
+        Long userId = userService.registerUser(registerReqVO);
+
+        // 3. 创建 Token 令牌，记录登录日志
+        return createTokenAfterLoginSuccess(userId, registerReqVO.getUsername(), LoginLogTypeEnum.LOGIN_USERNAME);
+    }
+
+    private void createLogoutLog(Long userId, Integer userType, Integer logType) {
+        LoginLogCreateReqDTO reqDTO = new LoginLogCreateReqDTO();
+        reqDTO.setLogType(logType);
+        reqDTO.setTraceId(TracerUtils.getTraceId());
+        reqDTO.setUserId(userId);
+        reqDTO.setUserType(userType);
+        if (ObjectUtil.equal(getUserType().getValue(), userType)) {
+            reqDTO.setUsername(getUsername(userId));
+        } else {
+//            reqDTO.setUsername(memberService.getMemberUserMobile(userId));
+        }
+        reqDTO.setUserAgent(ServletUtils.getUserAgent());
+        reqDTO.setUserIp(ServletUtils.getClientIP());
+        reqDTO.setResult(LoginResultEnum.SUCCESS.getResult());
+        loginLogService.createLoginLog(reqDTO);
+    }
+
     private AuthLoginRespVO createTokenAfterLoginSuccess(Long userId, String username, LoginLogTypeEnum logType) {
         // 插入登陆日志
         createLoginLog(userId, username, logType, LoginResultEnum.SUCCESS);
@@ -106,5 +152,13 @@ public class AdminAuthServiceImpl implements AdminAuthService {
 
     private UserTypeEnum getUserType() {
         return UserTypeEnum.ADMIN;
+    }
+
+    private String getUsername(Long userId) {
+        if (userId == null) {
+            return null;
+        }
+        AdminUserDO user = userService.getUser(userId);
+        return user != null ? user.getUsername() : null;
     }
 }

@@ -2,6 +2,7 @@ package com.neaterp.module.system.service.auth;
 
 import com.neaterp.module.system.controller.admin.auth.vo.AuthLoginReqVO;
 import com.neaterp.module.system.controller.admin.auth.vo.AuthLoginRespVO;
+import com.neaterp.module.system.controller.admin.auth.vo.AuthRegisterReqVO;
 import com.neaterp.module.system.dal.dataobject.user.AdminUserDO;
 import jakarta.validation.Valid;
 
@@ -31,4 +32,31 @@ public interface AdminAuthService {
      * @return 登录结果
      */
     AuthLoginRespVO login(@Valid AuthLoginReqVO reqVO);
+
+    /**
+     * 基于 token 退出登录
+     *
+     * @param token token
+     * @param logType 登出类型
+     */
+    void logout(String token, Integer logType);
+
+    /**
+     * 刷新访问令牌
+     *
+     * @param refreshToken 刷新令牌
+     * @return 登录结果
+     */
+    AuthLoginRespVO refreshToken(String refreshToken);
+
+    /**
+     * 用户注册
+     *
+     * @param createReqVO 注册用户
+     * @return 注册结果
+     */
+    AuthLoginRespVO register(AuthRegisterReqVO createReqVO);
+
+
+
 }
