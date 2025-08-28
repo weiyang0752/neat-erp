@@ -52,6 +52,7 @@
         <bizlog-sdk.version>3.0.6</bizlog-sdk.version>
         <ip2region.version>2.7.0</ip2region.version>
         <!-- 三方云服务相关 -->
+        <awssdk.version>2.30.14</awssdk.version>
         <commons-compress.version>1.27.1</commons-compress.version>
 
     </properties>
@@ -330,6 +331,13 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-compress</artifactId>
                 <version>${commons-compress.version}</version>
+            </dependency>
+
+            <!-- 三方云服务相关 -->
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>s3</artifactId>
+                <version>${awssdk.version}</version>
             </dependency>
 
         </dependencies>
