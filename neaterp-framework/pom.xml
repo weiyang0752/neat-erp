@@ -47,6 +47,7 @@
         <module>neaterp-spring-boot-starter-biz-tenant</module>
         <module>neaterp-spring-boot-starter-biz-data-permission</module>
         <module>neaterp-spring-boot-starter-biz-ip</module>
+        <module>neaterp-spring-boot-starter-job</module>
     </modules>
 
 </project>

@@ -1,0 +1,2 @@
+com.neaterp.framework.quartz.config.NeaterpQuartzAutoConfiguration
+com.neaterp.framework.quartz.config.NeaterpAsyncAutoConfiguration
