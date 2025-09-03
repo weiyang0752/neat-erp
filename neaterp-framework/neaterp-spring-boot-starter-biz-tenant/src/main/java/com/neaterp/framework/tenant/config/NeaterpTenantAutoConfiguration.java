@@ -10,6 +10,7 @@ import com.neaterp.framework.security.core.service.SecurityFrameworkService;
 import com.neaterp.framework.tenant.core.aop.TenantIgnore;
 import com.neaterp.framework.tenant.core.aop.TenantIgnoreAspect;
 import com.neaterp.framework.tenant.core.db.TenantDatabaseInterceptor;
+import com.neaterp.framework.tenant.core.job.TenantJobAspect;
 import com.neaterp.framework.tenant.core.redis.TenantRedisCacheManager;
 import com.neaterp.framework.tenant.core.security.TenantSecurityWebFilter;
 import com.neaterp.framework.tenant.core.service.TenantFrameworkService;
@@ -170,10 +171,10 @@ public class NeaterpTenantAutoConfiguration {
 
     // ========== Job ==========
 
-//    @Bean
-//    public TenantJobAspect tenantJobAspect(TenantFrameworkService tenantFrameworkService) {
-//        return new TenantJobAspect(tenantFrameworkService);
-//    }
+    @Bean
+    public TenantJobAspect tenantJobAspect(TenantFrameworkService tenantFrameworkService) {
+        return new TenantJobAspect(tenantFrameworkService);
+    }
 
     // ========== Redis ==========
 
