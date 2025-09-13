@@ -35,6 +35,12 @@
             <version>${revision}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.neaterp</groupId>
+            <artifactId>neaterp-module-bpm</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
         <!-- spring boot 配置所需依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

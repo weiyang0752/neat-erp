@@ -15,6 +15,7 @@
         <module>neaterp-server</module>
         <module>neaterp-module-system</module>
         <module>neaterp-module-infra</module>
+        <module>neaterp-module-bpm</module>
     </modules>
 
     <name>${project.artifactId}</name>
