@@ -161,5 +161,31 @@ CREATE TABLE `bpm_process_listener` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='BPM 流程监听器';
 
 
+-- ----------------------------
+-- Table structure for bpm_process_instance_copy
+-- ----------------------------
+DROP TABLE IF EXISTS `bpm_process_instance_copy`;
+CREATE TABLE `bpm_process_instance_copy` (
+ `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
+ `start_user_id` bigint NOT NULL COMMENT '发起人 Id',
+ `process_instance_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '流程名',
+ `process_instance_id` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '流程实例的编号',
+ `process_definition_id` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '流程实例的流程定义编号',
+ `category` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '流程分类',
+ `activity_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '流程活动的编号',
+ `activity_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '流程活动的名字',
+ `task_id` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '流程活动的编号',
+ `user_id` bigint NOT NULL COMMENT '用户编号（被抄送的用户编号）',
+ `reason` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '抄送意见',
+ `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '创建者',
+ `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+ `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '' COMMENT '更新者',
+ `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+ `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
+ `tenant_id` bigint NOT NULL DEFAULT '0' COMMENT '租户编号',
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='流程抄送';
+
+
 
 SET FOREIGN_KEY_CHECKS = 1;
