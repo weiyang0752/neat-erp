@@ -9,6 +9,7 @@ import com.neaterp.module.system.controller.admin.user.vo.user.UserSaveReqVO;
 import com.neaterp.module.system.dal.dataobject.user.AdminUserDO;
 import jakarta.validation.Valid;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -129,5 +130,39 @@ public interface AdminUserService {
      * @return 用户编号
      */
     Long registerUser(@Valid AuthRegisterReqVO registerReqVO);
+
+    /**
+     * 获得用户列表
+     *
+     * @param ids 用户编号数组
+     * @return 用户列表
+     */
+    List<AdminUserDO> getUserList(Collection<Long> ids);
+
+    /**
+     * 校验用户们是否有效。如下情况，视为无效：
+     * 1. 用户编号不存在
+     * 2. 用户被禁用
+     *
+     * @param ids 用户编号数组
+     */
+    void validateUserList(Collection<Long> ids);
+
+    /**
+     * 获得指定岗位的用户数组
+     *
+     * @param postIds 岗位数组
+     * @return 用户数组
+     */
+    List<AdminUserDO> getUserListByPostIds(Collection<Long> postIds);
+
+    /**
+     * 获得指定部门的用户数组
+     *
+     * @param deptIds 部门数组
+     * @return 用户数组
+     */
+    List<AdminUserDO> getUserListByDeptIds(Collection<Long> deptIds);
+
 
 }

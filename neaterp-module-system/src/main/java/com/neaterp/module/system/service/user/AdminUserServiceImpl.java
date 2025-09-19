@@ -310,6 +310,55 @@ public class AdminUserServiceImpl implements AdminUserService {
         return user.getId();
     }
 
+    @Override
+    public List<AdminUserDO> getUserList(Collection<Long> ids) {
+        if (CollUtil.isEmpty(ids)) {
+            return Collections.emptyList();
+        }
+        return userMapper.selectByIds(ids);
+    }
+
+    @Override
+    public void validateUserList(Collection<Long> ids) {
+        if (CollUtil.isEmpty(ids)) {
+            return;
+        }
+        // 获得用户信息
+        List<AdminUserDO> users = userMapper.selectByIds(ids);
+        Map<Long, AdminUserDO> userMap = CollectionUtils.convertMap(users, AdminUserDO::getId);
+        // 校验
+        ids.forEach(id -> {
+            AdminUserDO user = userMap.get(id);
+            if (user == null) {
+                throw exception(USER_NOT_EXISTS);
+            }
+            if (!CommonStatusEnum.ENABLE.getStatus().equals(user.getStatus())) {
+                throw exception(USER_IS_DISABLE, user.getNickname());
+            }
+        });
+    }
+
+    @Override
+    public List<AdminUserDO> getUserListByPostIds(Collection<Long> postIds) {
+
+        if (CollUtil.isEmpty(postIds)) {
+            return Collections.emptyList();
+        }
+        Set<Long> userIds = convertSet(userPostMapper.selectListByPostIds(postIds), UserPostDO::getUserId);
+        if (CollUtil.isEmpty(userIds)) {
+            return Collections.emptyList();
+        }
+        return userMapper.selectByIds(userIds);
+    }
+
+    @Override
+    public List<AdminUserDO> getUserListByDeptIds(Collection<Long> deptIds) {
+        if (CollUtil.isEmpty(deptIds)) {
+            return Collections.emptyList();
+        }
+        return userMapper.selectListByDeptIds(deptIds);
+    }
+
     private void updateUserPost(UserSaveReqVO reqVO, AdminUserDO updateObj) {
         Long userId = reqVO.getId();
         Set<Long> dbPostIds = convertSet(userPostMapper.selectListByUserId(userId), UserPostDO::getPostId);

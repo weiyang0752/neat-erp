@@ -155,6 +155,11 @@ public class DeptServiceImpl implements DeptService {
         });
     }
 
+    @Override
+    public List<DeptDO> getDeptListByLeaderUserId(Long id) {
+        return deptMapper.selectListByLeaderUserId(id);
+    }
+
     @VisibleForTesting
     void validateDeptExists(Long id) {
         if (id == null) {

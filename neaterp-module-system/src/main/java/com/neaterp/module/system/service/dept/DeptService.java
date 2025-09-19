@@ -106,4 +106,12 @@ public interface DeptService {
      */
     void validateDeptList(Collection<Long> ids);
 
+    /**
+     * 获得指定领导者的部门列表
+     *
+     * @param id 领导者编号
+     * @return 部门列表
+     */
+    List<DeptDO> getDeptListByLeaderUserId(Long id);
+
 }
